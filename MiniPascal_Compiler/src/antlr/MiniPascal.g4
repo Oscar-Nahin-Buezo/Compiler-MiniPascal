@@ -1,0 +1,28 @@
+grammar MiniPascal;
+import CommonLexerRules;
+
+program: PROGRAM ID SEMICOLON block;
+block: library? declarations? subprogram_declarations? compound_statement;
+library: (USES ID SEMICOLON)?;
+declarations : VAR ((variable_declaration |variable_inializacion) SEMICOLON)+ | ;
+variable_declaration : ID (COMMA ID)* COLON type_specifier ;
+variable_inializacion : ID ASSIGN NUMBER ;
+type_specifier : INTEGER | REAL | BOOLEAN | CHAR ;
+subprogram_declarations : (function_declaration | procedure_declaration)* ;
+function_declaration : FUNCTION ID LPAREN arguments RPAREN COLON type_specifier SEMICOLON declarations compound_statement ;
+procedure_declaration : PROCEDURE ID LPAREN arguments RPAREN SEMICOLON declarations compound_statement ;
+arguments : variable_declaration (COMMA variable_declaration)* | ;
+compound_statement : BEGIN statement_list END DOT;
+statement_list : statement (SEMICOLON statement)* ;
+statement : declarations|compound_statement | assignment_statement | if_statement | while_statement | for_statement | write_statement | read_statement ;
+assignment_statement : VAR? ID ASSIGN expression ;
+if_statement : IF condition THEN statement | IF condition THEN statement ELSE statement ;
+while_statement : WHILE condition DO statement ;
+for_statement : FOR ID ASSIGN expression TO expression DO statement ;
+write_statement : (WRITE LPAREN expression RPAREN|WRITELN LPAREN CONSTSTR RPAREN|WRITELN LPAREN CONSTSTR (COMMA (ID|CONSTSTR))* RPAREN) ;
+read_statement : READ LPAREN ID RPAREN ;
+condition : expression relational_operator expression ;
+relational_operator : LT | GT | EQ | NEQ | LEQ | GEQ ;
+expression : term ((ADDOP | OR) term)* ;
+term : factor ((MULOP | AND) factor)* ;
+factor : ID | NUMBER | LPAREN expression RPAREN | NOT factor ;
