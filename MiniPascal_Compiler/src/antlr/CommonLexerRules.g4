@@ -14,12 +14,12 @@ MOD: 'mod';
 INTEGER_DIV: 'div';
 
 // Reglas para operadores relacionales
-EQ: '=';
-NEQ: '<>';
-LT: '<';
-LEQ: '<=';
-GT: '>';
-GEQ: '>=';
+IGUAL: '=';
+MENOR_MAYOR: '<>';
+MENOR_QUE: '<';
+MENOR_IGUAL: '<=';
+MAYOR_QUE: '>';
+MAYOR_IGUAL: '>=';
 
 // Reglas para operadores lógicos
 AND: 'and';

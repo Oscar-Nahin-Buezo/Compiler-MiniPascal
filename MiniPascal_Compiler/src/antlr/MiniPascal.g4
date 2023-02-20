@@ -1,28 +1,40 @@
 grammar MiniPascal;
 import CommonLexerRules;
 
-program: PROGRAM ID SEMICOLON block;
-block: library? declarations? subprogram_declarations? compound_statement;
-library: (USES ID SEMICOLON)?;
-declarations : VAR ((variable_declaration |variable_inializacion) SEMICOLON)+ | ;
-variable_declaration : ID (COMMA ID)* COLON type_specifier ;
-variable_inializacion : ID ASSIGN NUMBER ;
-type_specifier : INTEGER | REAL | BOOLEAN | CHAR ;
-subprogram_declarations : (function_declaration | procedure_declaration)* ;
-function_declaration : FUNCTION ID LPAREN arguments RPAREN COLON type_specifier SEMICOLON declarations compound_statement ;
-procedure_declaration : PROCEDURE ID LPAREN arguments RPAREN SEMICOLON declarations compound_statement ;
-arguments : variable_declaration (COMMA variable_declaration)* | ;
-compound_statement : BEGIN statement_list END DOT;
-statement_list : statement (SEMICOLON statement)* ;
-statement : declarations|compound_statement | assignment_statement | if_statement | while_statement | for_statement | write_statement | read_statement ;
-assignment_statement : VAR? ID ASSIGN expression ;
-if_statement : IF condition THEN statement | IF condition THEN statement ELSE statement ;
-while_statement : WHILE condition DO statement ;
-for_statement : FOR ID ASSIGN expression TO expression DO statement ;
-write_statement : (WRITE LPAREN expression RPAREN|WRITELN LPAREN CONSTSTR RPAREN|WRITELN LPAREN CONSTSTR (COMMA (ID|CONSTSTR))* RPAREN) ;
-read_statement : READ LPAREN ID RPAREN ;
-condition : expression relational_operator expression ;
-relational_operator : LT | GT | EQ | NEQ | LEQ | GEQ ;
-expression : term ((ADDOP | OR) term)* ;
+start: PROGRAM ID SEMICOLON estructura_codigo;//aqui comienza a buscar y reconocer
+estructura_codigo: librerias? declaracion_iniciacion_variables? declaracion_subprogramas? inicio_de_programa;
+librerias: (USES ID SEMICOLON)?;
+
+//declaracion e inicializacion de variables
+declaracion_iniciacion_variables : VAR ((declaracion_variable |inicializar_variable) SEMICOLON)+ | ;
+declaracion_variable : ID (COMMA ID)* COLON tipo_de_dato ;
+inicializar_variable : ID ASSIGN NUMBER ;
+tipo_de_dato : INTEGER | REAL | BOOLEAN | CHAR ;
+
+//declaracion de funciones y metodos
+declaracion_subprogramas : (declarar_funcion | declarar_metodo)* ;
+declarar_funcion : FUNCTION ID LPAREN argumentos RPAREN COLON tipo_de_dato SEMICOLON declaracion_iniciacion_variables inicio_de_programa ;
+declarar_metodo : PROCEDURE ID LPAREN argumentos RPAREN SEMICOLON declaracion_iniciacion_variables inicio_de_programa ;
+argumentos : declaracion_variable (COMMA declaracion_variable)* | ;
+
+//inicio; es decir begin y las declaracion de variables, metodos y funciones, condiciones etc.
+inicio_de_programa : BEGIN lista_de_declaraciones END DOT;
+lista_de_declaraciones : declaraciones (SEMICOLON declaraciones)* ;
+declaraciones : declaracion_iniciacion_variables|inicio_de_programa | sentencia_asignacion | sentencia_if | sentencia_while| sentencia_for | sentencia_write | sentencia_read ;
+sentencia_asignacion : VAR? ID ASSIGN expresion ;
+
+//Expresiones para reconocer los if, while  y for
+sentencia_if : IF condicion THEN declaraciones | IF condicion THEN declaraciones ELSE declaraciones ;
+sentencia_while: WHILE condicion DO declaraciones ;
+sentencia_for : FOR ID ASSIGN expresion TO expresion DO declaraciones ;
+
+//reconocer la funciones de write, ejemplo wirteln('hola') y lectura desde el teclado con read
+sentencia_write : (WRITE LPAREN expresion RPAREN|WRITELN LPAREN CONSTSTR RPAREN|WRITELN LPAREN CONSTSTR (COMMA (ID|CONSTSTR))* RPAREN) ;
+sentencia_read : READ LPAREN ID RPAREN ;
+
+//condicion y argumentos del los if, while etc.
+condicion : expresion relational_operator expresion ;
+relational_operator : MENOR_QUE | MAYOR_QUE | IGUAL | MENOR_MAYOR | MENOR_IGUAL | MAYOR_IGUAL ;
+expresion : term ((ADDOP | OR) term)* ;
 term : factor ((MULOP | AND) factor)* ;
-factor : ID | NUMBER | LPAREN expression RPAREN | NOT factor ;
+factor : ID | NUMBER | LPAREN expresion RPAREN | NOT factor ;
