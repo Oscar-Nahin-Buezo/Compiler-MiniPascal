@@ -21,18 +21,23 @@ public class Main {
         int opcion =1;
         Scanner scanner = new Scanner(System.in);
         try{
+            //leemos el archivo que tiene el codigo a probar
             String file = "src/ejemplo";
-
             CharStream cs = fromFileName(file);
 
+            //Pasamos el codigo o texto al lexer para que genere los tokens
             MiniPascalLexer lexer = new MiniPascalLexer(cs);// depende que charStream usemos lo enviamos al lexer
             CommonTokenStream token = new CommonTokenStream(lexer);
+
+            //se procede a generar el arbol AST
             MiniPascalParser parser = new MiniPascalParser(token);
             ParseTree tree = parser.start();
             vista visitor = new vista();
             visitor.visit(tree);
+
+            //cargamos un menu con las opciones del proyecto
             while(opcion!=0){
-                System.out.println("Menu\n1. Ver arbol\n0. Salir");
+                System.out.println("Menu\n1. Ver arbol AST\n0. Salir");
                 opcion= scanner.nextInt();
                 if(opcion == 1){
                     //Visualizando el arbol en un panel
