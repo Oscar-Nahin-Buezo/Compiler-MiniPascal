@@ -52,7 +52,7 @@ public class Main {
             ejecutarGui(tree, parser, contenido);
 
             //cargamos un menu con las opciones del proyecto
-            while(opcion!=0){
+           /* while(opcion!=0){
                 System.out.println("Menu\n1. Ver arbol AST\n0. Salir");
                 opcion= scanner.nextInt();
                 if(opcion == 1){
@@ -66,7 +66,7 @@ public class Main {
                 }
                 if(opcion == 0)
                     break;
-            }
+            }*/
         }catch(Exception e){
             System.out.println(e);
         }
@@ -109,6 +109,7 @@ public class Main {
                     ParseTree tree2 = parser.start();
                     visitor.visit(tree2);
                     viewer.setTree(tree2);
+                    Mostrar_resultado(tree2);
                 }
             }
         });
@@ -151,7 +152,8 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
-    public static void Mostrar_resultado(){
-        
+    public static void Mostrar_resultado(ParseTree tree){
+        ParseTreeWalker caminante = new ParseTreeWalker();
+        caminante.walk(new LeyendoCodigo(), tree);
     }
 }
