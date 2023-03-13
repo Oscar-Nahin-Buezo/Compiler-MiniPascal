@@ -28,7 +28,7 @@ sentencia_if : IF condicion THEN declaraciones | IF condicion THEN declaraciones
 sentencia_while: WHILE condicion DO declaraciones ;
 sentencia_for : FOR ID ASSIGN expresion TO expresion DO declaraciones ;
 
-//reconocer la funciones de write, ejemplo wirteln('hola') y lectura desde el teclado con read
+//reconocer la funciones de write, ejemplo.txt wirteln('hola') y lectura desde el teclado con read
 sentencia_write : (WRITE LPAREN expresion RPAREN|WRITELN LPAREN CONSTSTR RPAREN|WRITELN LPAREN CONSTSTR (COMMA (ID|CONSTSTR))* RPAREN) ;
 sentencia_read : READ LPAREN ID RPAREN ;
 
