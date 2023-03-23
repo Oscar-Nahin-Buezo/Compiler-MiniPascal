@@ -10,6 +10,7 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
             System.out.println(ctx.CONSTSTR() +""+ctx.ID());
     }
     @Override public void enterExpresion(MiniPascalParser.ExpresionContext ctx) {
+        System.out.println("Eentramns a una asigancion");
         System.out.println(ctx.getText());
     }
 }

@@ -12,6 +12,8 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.nio.*;
+import java.nio.file.Paths;
+import java.nio.file.Path;
 import java.util.Scanner;
 import javax.swing.*;
 import java.io.*;
@@ -21,52 +23,23 @@ import javax.swing.*;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Bienvenido al compilador Mini-Pascal!");
-        int opcion =1;
-        Scanner scanner = new Scanner(System.in);
         String contenido ="";
         try{
-            try {
-                File myObj = new File("MiniPascal_Compiler/src/codigo.txt");
-                Scanner myReader = new Scanner(myObj);
-                while (myReader.hasNextLine()) {
-                    String data = myReader.nextLine();
-                    contenido+=data+"\n";
-                    System.out.println(data);
-                }
-                myReader.close();
-            } catch (Exception f) {
-                System.out.println("An error occurred.");
+            contenido = lectura_archivo();
+            if(contenido!=""){
+                CharStream cs = fromString(contenido);
+                //Pasamos el codigo o texto al lexer para que genere los tokens
+                MiniPascalLexer lexer = new MiniPascalLexer(cs);// depende que charStream usemos lo enviamos al lexer
+                CommonTokenStream token = new CommonTokenStream(lexer);
+
+                //se procede a generar el arbol AST
+                MiniPascalParser parser = new MiniPascalParser(token);
+                ParseTree tree = parser.start();
+                ejecutarGui(tree, parser, contenido);
+            }else{
+                JOptionPane.showMessageDialog(null,"Selecciones un archivo");
             }
 
-            //leemos el archivo que tiene el codigo a probar
-            String file = "MiniPascal_Compiler/src/codigo.txt";
-            CharStream cs = fromFileName(file);
-
-            //Pasamos el codigo o texto al lexer para que genere los tokens
-            MiniPascalLexer lexer = new MiniPascalLexer(cs);// depende que charStream usemos lo enviamos al lexer
-            CommonTokenStream token = new CommonTokenStream(lexer);
-
-            //se procede a generar el arbol AST
-            MiniPascalParser parser = new MiniPascalParser(token);
-            ParseTree tree = parser.start();
-            ejecutarGui(tree, parser, contenido);
-
-            //cargamos un menu con las opciones del proyecto
-           /* while(opcion!=0){
-                System.out.println("Menu\n1. Ver arbol AST\n0. Salir");
-                opcion= scanner.nextInt();
-                if(opcion == 1){
-                    //Visualizando el arbol en un panel
-                    //show AST in GUI
-                    TreeViewer viewer = new TreeViewer(Arrays.asList(
-                            parser.getRuleNames()),tree);
-                    viewer.open();
-                    viewer.setScale(2); // Scale a little
-
-                }
-                if(opcion == 0)
-                    break;
-            }*/
         }catch(Exception e){
             System.out.println(e);
         }
@@ -76,7 +49,7 @@ public class Main {
         vista visitor = new vista();
         visitor.visit(tree);
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
-
+        //TreeViewer viewer = null;
         JTextArea  entrada = new JTextArea(25,25);
         entrada.setText(contenido);
         JTextArea  salida = new JTextArea(25,25);
@@ -85,6 +58,7 @@ public class Main {
         JButton Seleccionar_archivo = new JButton("Seleccionar Archivo");
         JFrame frame = new JFrame("Antlr AST");
         JPanel panel = new JPanel();
+
         //************Eventos de botones***********************************************************
         Compilar.addActionListener(new ActionListener() {
             @Override
@@ -129,13 +103,12 @@ public class Main {
             @Override
             public void actionPerformed(ActionEvent e) {
                 try {
-                    File myObj = new File("MiniPascal_Compiler/src/codigo.txt");
-                    Scanner myReader = new Scanner(myObj);
-                    while (myReader.hasNextLine()) {
-                        String data = myReader.nextLine();
-                        System.out.println(data);
-                    }
-                    myReader.close();
+
+                   String contenido="";
+                   contenido = lectura_archivo();
+                   if(contenido !=""){
+                       entrada.setText(contenido);
+                   }
                 } catch (Exception f) {
                     System.out.println("An error occurred.");
                 }
@@ -156,4 +129,53 @@ public class Main {
         ParseTreeWalker caminante = new ParseTreeWalker();
         caminante.walk(new LeyendoCodigo(), tree);
     }
+    public static String lectura_archivo() throws FileNotFoundException {
+        String ruta2="";
+        String contenido ="";
+        try {
+            JFileChooser fileChooser = new JFileChooser();
+            int option = fileChooser.showOpenDialog(null);
+            if (option == JFileChooser.APPROVE_OPTION) {
+                File selectedFile = fileChooser.getSelectedFile();
+                ruta2 = selectedFile.getAbsolutePath();
+                System.out.println("Selected file: " + selectedFile.getAbsolutePath());
+                File myObj = new File(ruta2);
+                Scanner myReader = new Scanner(myObj);
+                while (myReader.hasNextLine()) {
+                    String data = myReader.nextLine();
+                    contenido += data + "\n";
+                    System.out.println(data);
+                }
+                myReader.close();
+            } else {
+                System.out.println("Operacion canceleda");
+            }
+            return contenido;
+        }catch (Exception f){
+            System.out.println("Fallo en lectura de archivo");
+            return contenido;
+        }
+
+    }
+
+    public static ParseTree Crear_AST(String contenido){
+        ParseTree tree = null;
+        try {
+            CharStream cs = fromString(contenido);
+
+            //Pasamos el codigo o texto al lexer para que genere los tokens
+            MiniPascalLexer lexer = new MiniPascalLexer(cs);// depende que charStream usemos lo enviamos al lexer
+            CommonTokenStream token = new CommonTokenStream(lexer);
+
+            //se procede a generar el arbol AST
+            MiniPascalParser parser = new MiniPascalParser(token);
+            tree = parser.start();
+            return tree;
+        }catch(Exception j){
+            System.out.println(j);
+            return tree;
+        }
+
+    }
+
 }
