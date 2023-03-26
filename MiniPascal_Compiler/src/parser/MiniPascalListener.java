@@ -247,14 +247,4 @@ public interface MiniPascalListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	void exitTerm(MiniPascalParser.TermContext ctx);
-	/**
-	 * Enter a parse tree produced by {@link MiniPascalParser#factor}.
-	 * @param ctx the parse tree
-	 */
-	void enterFactor(MiniPascalParser.FactorContext ctx);
-	/**
-	 * Exit a parse tree produced by {@link MiniPascalParser#factor}.
-	 * @param ctx the parse tree
-	 */
-	void exitFactor(MiniPascalParser.FactorContext ctx);
 }

@@ -79,6 +79,7 @@ OF: 'OF';
 // Reglas para constantes
 CONSTCHAR: '\'' ~('\'') '\'';
 CONSTSTR: '\'' ~('\n' | '\'')* '\'';
+CADENA:  '"' ~["\r\n]* '"' ;
 
 
 // Regla para identificadores

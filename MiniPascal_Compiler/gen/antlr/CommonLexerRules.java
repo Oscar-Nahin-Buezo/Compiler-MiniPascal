@@ -1,5 +1,5 @@
 // Generated from java-escape by ANTLR 4.11.1
-package parser;
+package antlr;
 import org.antlr.v4.runtime.Lexer;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.Token;
@@ -10,7 +10,7 @@ import org.antlr.v4.runtime.dfa.DFA;
 import org.antlr.v4.runtime.misc.*;
 
 @SuppressWarnings({"all", "warnings", "unchecked", "unused", "cast", "CheckReturnValue"})
-public class MiniPascalLexer extends Lexer {
+public class CommonLexerRules extends Lexer {
 	static { RuntimeMetaData.checkVersion("4.11.1", RuntimeMetaData.VERSION); }
 
 	protected static final DFA[] _decisionToDFA;
@@ -107,13 +107,13 @@ public class MiniPascalLexer extends Lexer {
 	}
 
 
-	public MiniPascalLexer(CharStream input) {
+	public CommonLexerRules(CharStream input) {
 		super(input);
 		_interp = new LexerATNSimulator(this,_ATN,_decisionToDFA,_sharedContextCache);
 	}
 
 	@Override
-	public String getGrammarFileName() { return "MiniPascal.g4"; }
+	public String getGrammarFileName() { return "CommonLexerRules.g4"; }
 
 	@Override
 	public String[] getRuleNames() { return ruleNames; }

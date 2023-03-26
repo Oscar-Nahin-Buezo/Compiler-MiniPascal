@@ -154,10 +154,4 @@ public interface MiniPascalVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitTerm(MiniPascalParser.TermContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#factor}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFactor(MiniPascalParser.FactorContext ctx);
 }

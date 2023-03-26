@@ -19,7 +19,8 @@ import javax.swing.*;
 import java.io.*;
 import java.util.*;
 import javax.swing.*;
-
+import java.util.ArrayDeque;
+import java.util.Deque;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Bienvenido al compilador Mini-Pascal!");
@@ -127,7 +128,9 @@ public class Main {
     }
     public static void Mostrar_resultado(ParseTree tree){
         ParseTreeWalker caminante = new ParseTreeWalker();
+        LeyendoCodigo lector = new LeyendoCodigo();
         caminante.walk(new LeyendoCodigo(), tree);
+
     }
     public static String lectura_archivo() throws FileNotFoundException {
         String ruta2="";
@@ -144,7 +147,7 @@ public class Main {
                 while (myReader.hasNextLine()) {
                     String data = myReader.nextLine();
                     contenido += data + "\n";
-                    System.out.println(data);
+                    //System.out.println(data);
                 }
                 myReader.close();
             } else {
