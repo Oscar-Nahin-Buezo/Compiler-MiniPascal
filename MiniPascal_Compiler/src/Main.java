@@ -31,10 +31,14 @@ public class Main {
                 CharStream cs = fromString(contenido);
                 //Pasamos el codigo o texto al lexer para que genere los tokens
                 MiniPascalLexer lexer = new MiniPascalLexer(cs);// depende que charStream usemos lo enviamos al lexer
+                lexer.removeErrorListeners();
+                lexer.addErrorListener(new MyErrorListener());
                 CommonTokenStream token = new CommonTokenStream(lexer);
 
                 //se procede a generar el arbol AST
                 MiniPascalParser parser = new MiniPascalParser(token);
+                parser.removeErrorListeners();
+                parser.addErrorListener(new MyErrorListener());
                 ParseTree tree = parser.start();
                 ejecutarGui(tree, parser, contenido);
             }else{

@@ -152,6 +152,9 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
         }
 
     }
+    public void operaciones_booleanas(){
+
+    }
     public String transformar_ecuacion(String ecuacion){
         String nueva_ecuacion = "";
         for (int i = 0; i<ecuacion.length(); i++){

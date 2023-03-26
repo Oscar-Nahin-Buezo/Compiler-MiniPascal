@@ -1,4 +1,4 @@
-PROGRAM ejemplo;
+PROGRAM ejemplo
 BEGIN
  WRITELN('Suma');
  VAR c1 := "hola";
