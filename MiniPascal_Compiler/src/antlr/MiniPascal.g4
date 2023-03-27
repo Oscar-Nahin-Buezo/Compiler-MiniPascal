@@ -29,7 +29,7 @@ sentencia_while: WHILE condicion DO declaraciones ;
 sentencia_for : FOR ID ASSIGN expresion TO expresion DO declaraciones ;
 
 //reconocer la funciones de write, ejemplo.txt wirteln('hola') y lectura desde el teclado con read
-sentencia_write : (WRITE LPAREN expresion RPAREN|WRITELN LPAREN CONSTSTR RPAREN|WRITELN LPAREN (ID (COMMA (ID|CONSTSTR))*)*(CONSTSTR (COMMA (ID|CONSTSTR))*)* RPAREN)|(WRITELN|WRITE) LPAREN ID RPAREN ;
+sentencia_write : ((WRITE|WRITELN) LPAREN expresion RPAREN|(WRITE|WRITELN) LPAREN CONSTSTR RPAREN|(WRITE|WRITELN) LPAREN (ID (COMMA (ID|CONSTSTR))*)*(CONSTSTR (COMMA (ID|CONSTSTR))*)* RPAREN)|(WRITELN|WRITE) LPAREN ID RPAREN ;
 sentencia_read : READ LPAREN ID RPAREN ;
 
 //condicion y argumentos del los if, while etc.
