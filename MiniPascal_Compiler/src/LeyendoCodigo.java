@@ -15,9 +15,25 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
     private Map<String, Object> variables = new HashMap<>();
     private Map<String, variablex> pila = new HashMap<>();
     @Override public void exitSentencia_write(MiniPascalParser.Sentencia_writeContext ctx) {
+        boolean correcto =true;
 
-        String periodico = recorrer_writeln(ctx);
-        System.out.println(periodico);
+        for (int i =0; i<ctx.getChildCount(); i++){
+            if(!ctx.ID().toString().equals("[]")){
+                String identi =ctx.ID().toString();
+                identi = identi.substring(1,identi.length()-1);
+                variablex tengo = null;
+                tengo = pila.get(identi);
+                if(tengo==null)
+                    correcto=false;
+            }
+        }
+        if(correcto){
+            String periodico = recorrer_writeln(ctx);
+            System.out.println(periodico);
+        }else{
+            System.out.println("***La WRITE o WRITELN: "+ctx.getText()+" No se puede imprimir debido a variables nulas***");
+        }
+
         /*String ref = ctx.ID().toString();
         ref = ref.substring(1,(ref.length()-1));
         for (String clave:pila.keySet()) {
@@ -53,20 +69,45 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
             variables.put(ctx.ID().getText(),ctx.expresion().getText());
         }
         if(verificacion==4){
-            System.out.println("ENtramos a booleano");
+            //System.out.println("ENtramos a booleano");
             alamcenar_variable( ctx.ID().getText(),ctx.expresion().getText(),"Boolean");
             variables.put(ctx.ID().getText(),ctx.expresion().getText());
         }
         if(verificacion==100){
-
-            if(ctx.expresion().ADDOP()!=null||ctx.expresion().MULOP()!=null){
-                //System.out.println("llamaremos a operaciones aritmeticas");
+            //System.out.println("La expresion: "+ctx.expresion().getText());
+            String addop = ctx.expresion().ADDOP().toString();
+            String mulop = ctx.expresion().MULOP().toString();
+            String ande = ctx.expresion().AND().toString();
+            String ore = ctx.expresion().OR().toString();
+            /*System.out.println("Addop: "+addop);
+            System.out.println("mulop: "+mulop);
+            System.out.println("and: "+ande);
+            System.out.println("or: "+ore);*/
+            if(!addop.equals("[]")||!mulop.equals("[]")){
+                //System.out.println("llamaremos a la aritmetica: "+ctx.expresion().getText());
                 boolean operacion = operacion_aritmetica(ctx.ID().getText(),ctx.expresion().getText());
-                //si no es aritmetica, probaremos con concatenacion
                 if(!operacion){
+                    //System.out.println("llamaremos a la concatenacion: "+ctx.expresion().getText());
                     operacion_concatenacion(ctx.ID().getText(),ctx.expresion().getText());
                 }
+            }else if(!ande.equals("[]")||!ore.equals("[]")){
+                String renovado = "";
+                for (int j = 0; j<ctx.expresion().getChildCount(); j++){
+                    if(j ==ctx.expresion().getChildCount()-1) {
+                        renovado += ctx.expresion().getChild(j).getText();
+                    }else{
+                        renovado+=ctx.expresion().getChild(j).getText()+" ";
+                    }
+
+                }
+                //System.out.println("llamaremos a la operacion booleana: "+ctx.expresion().getText());
+                //System.out.println("Veamos si tiene and o or: "+ctx.expresion().OR().toString());
+                boolean exito =operaciones_booleanas(ctx.ID().getText(),renovado);
+                if(!exito){
+                    JOptionPane.showMessageDialog(null,"Error al asignar valor a la varible booleana: "+ctx.ID().getText());
+                }
             }
+
 
         }
 
@@ -74,6 +115,7 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
 
     public int verificar_tipo_valor(String valor){
         if (valor.matches("^\".*\"$")) {
+            //System.out.println("variable String: "+valor);
             //System.out.println("ES estring");
             return 0;//cadena
         } else if (valor.matches("\\d+")) {
@@ -83,12 +125,10 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
             //System.out.println("ES double");
             return 2; // decimal
         } else if(valor.matches("^(true|false)$")){
-           // System.out.println("variable: "+valor);
+           //System.out.println("variable: "+valor);
             //System.out.println("ES booleano");
             return 4;// valor booleano
-        }else if (valor.matches("\\w+")) {
-           // System.out.println("variable: "+valor);
-            return 3; //asignacion de variable
+
         } else {
             //System.out.println("ES operacion compleja");
             return 100;// asignacion compleja, como ser operaciones aritmeticas
@@ -103,17 +143,27 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
 
     public Boolean operacion_aritmetica(String name, String operacion){
         try{
+            boolean datos_correctos =true;
            // System.out.println("entramos a operaciones aritmeticas con esto: nombre: "+name +" operacion: "+operacion);
             for (String variable : pila.keySet()) {
                 String valorMan = pila.get(variable).getValue();
                 operacion = operacion.replaceAll(variable, valorMan);
             }
-            operacion = transformar_ecuacion(operacion);
-            //System.out.println("Tenemos el resultado de reemplazo: "+operacion);
-            Double temp = resolver_ecuacion(operacion);
-            //System.out.println("Resultado de resolver la ecuacion: "+temp);
-            variablex nueva_variable = new variablex(name, Double.toString(temp),"Double");
-            pila.put(name,nueva_variable);
+            if (operacion.matches(".*[a-zA-Z].*")) {
+                //System.out.println("El String contiene al menos una letra.");
+                return false;
+            } else {
+                operacion = transformar_ecuacion(operacion);
+
+                //System.out.println("Tenemos el resultado de reemplazo: "+operacion);
+                Double temp = resolver_ecuacion(operacion);
+                //System.out.println("Resultado de resolver la ecuacion: "+temp);
+                variablex nueva_variable = new variablex(name, Double.toString(temp),"Double");
+                pila.put(name,nueva_variable);
+            }
+
+
+
         }catch (Exception f){
             System.out.println(f.getMessage());
             return false;
@@ -121,38 +171,95 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
         return true;
     }
     public void operacion_concatenacion(String name, String ecuacion){
-        boolean correcto= true;
-        String resultado ="";
-        ecuacion = ecuacion.replace('+',':');
-        String[] arreglo = ecuacion.split(":");
-        for(String temp: arreglo){
-            //System.out.println("Tenemos el temp: "+temp);
-            for (String clave:pila.keySet()) {
-                variablex eso = pila.get(clave);
-                //System.out.println("var: "+eso.getName()+" valor: "+eso.getValue());
-                if(clave.equals(temp)){
-                    //System.out.println("Coincidencia");
-                    variablex hola = pila.get(clave);
-                    if(hola.getTipo().equals("Boolean")){
-                        correcto=false;
-                    }else{
-                        String frase = hola.getValue();
-                        frase = frase.substring(1,frase.length()-1);
-                        resultado+=frase;
+        try{
+            boolean correcto= true;
+            String resultado ="";
+            //System.out.println("ENtramos a concatenacion con esto: "+ecuacion);
+            ecuacion = ecuacion.replace('+',':');
+            String[] arreglo = ecuacion.split(":");
+            for(String temp: arreglo){
+               // System.out.println("Tenemos el temp: "+temp);
+                for (String clave:pila.keySet()) {
+                    variablex eso = pila.get(clave);
+                    //System.out.println("var: "+eso.getName()+" valor: "+eso.getValue());
+
+                    if(clave.equals(temp)){
+                        //System.out.println("Coincidencia");
+                        variablex hola = pila.get(clave);
+                        if(hola.getTipo().equals("Boolean")){
+                            correcto=false;
+                        }else{
+                            String frase = hola.getValue();
+                            //System.out.println("Valor del temp: "+frase);
+                            frase = frase.substring(1,frase.length()-1);
+                            resultado+=frase;
+                        }
                     }
                 }
             }
-        }
-        if(correcto){
-            variablex nueva_variable = new variablex(name,resultado,"String");
-            //System.out.println("Resultado de la concatenacion: "+resultado);
-            pila.put(name,nueva_variable);
-        }else{
+            if(correcto){
+                variablex nueva_variable = new variablex(name,resultado,"String");
+                //System.out.println("Resultado de la concatenacion: "+resultado);
+                pila.put(name,nueva_variable);
+            }else{
+                JOptionPane.showMessageDialog(null,"Error al intentar asignar los valores a: "+name);
+            }
+        }catch(Exception e ){
             JOptionPane.showMessageDialog(null,"Error al intentar asignar los valores a: "+name);
         }
 
+
     }
-    public void operaciones_booleanas(){
+    public boolean operaciones_booleanas(String name, String ecuacion){
+        if(ecuacion.contains("and")||ecuacion.contains("or")){
+            //System.out.println("pasamos las condiciones booleanas");
+            // Divide la cadena en sus componentes y los almacena en un array
+            String[] componentes = ecuacion.split(" ");
+            //recorremos el array para remplazar las variables por su valor
+            for (int z  =0; z<componentes.length; z++){
+                String temp = componentes[z];
+                for(String clave: pila.keySet()){
+                    if(clave.equals(temp)){
+                        variablex variable = pila.get(clave);
+                        componentes[z]=variable.getValue();
+                    }
+                }
+            }
+            // Inicializa el resultado en el valor del primer operando
+            if (!componentes[0].equals("true")&&!componentes[0].equals("false"))
+                return false;
+            boolean resultado = Boolean.parseBoolean(componentes[0]);
+
+            // Itera a través de los componentes de la cadena
+            for (int i = 1; i < componentes.length; i += 2) {
+                // Obtiene el operador actual
+                String operador = componentes[i];
+
+                // Obtiene el operando siguiente
+                if (!componentes[i+1].equals("true")&&!componentes[i+1].equals("false"))
+                    return false;
+                boolean operando = Boolean.parseBoolean(componentes[i + 1]);
+
+                // Aplica el operador booleano correspondiente
+                switch (operador) {
+                    case "and":
+                        resultado = resultado && operando;
+                        break;
+                    case "or":
+                        resultado = resultado || operando;
+                        break;
+                }
+            }
+
+            // El resultado final es el valor de la operación booleana
+            //System.out.println("El resultado de la operación es: " + resultado);
+            variablex nueva_variable = new variablex(name, Boolean.toString(resultado),"Boolean");
+            pila.put(name,nueva_variable);
+            return true;
+        }else{
+            return false;
+        }
+
 
     }
     public String transformar_ecuacion(String ecuacion){
@@ -161,7 +268,10 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
             String letra = String.valueOf( ecuacion.charAt(i));
             if(letra.equals("+")||letra.equals("-")||letra.equals("*")||letra.equals("/"))
                 letra =" "+letra+" ";
+
             nueva_ecuacion+=letra;
+
+
         }
         return nueva_ecuacion;
     }
@@ -249,6 +359,7 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
             boolean bandera = false;
             for (String clave:pila.keySet()) {
                 if(clave.equals(temp)){
+                    //System.out.println("Coincide: "+temp);
                     bandera=true;
                     variablex hola = pila.get(clave);
                     impreso+=hola.getValue();

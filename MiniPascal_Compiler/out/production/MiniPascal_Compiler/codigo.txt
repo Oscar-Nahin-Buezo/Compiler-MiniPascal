@@ -1,9 +1,12 @@
-PROGRAM ejemplo
+PROGRAM ejemplo;
 BEGIN
  WRITELN('Suma');
  VAR c1 := "hola";
  VAR c2 := "Mundo";
  VAR c3 := c1+c2;
+ VAR b1:= true;
+ VAR b2:= false;
+ VAR b3:= b1 or b2;
  VAR num1 := 5;
  VAR num2 := 5;
  VAR total:= num1+num2-3;
