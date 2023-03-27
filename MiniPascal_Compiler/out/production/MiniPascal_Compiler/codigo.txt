@@ -1,6 +1,7 @@
 PROGRAM ejemplo;
 BEGIN
  WRITELN('Suma');
+ VAR miArreglo: array [1..5] of INTEGER = (1, 2, 3, 4, 5);
  VAR c1 := "hola";
  VAR c2 := "Mundo";
  VAR c3 := c1+c2;
@@ -10,6 +11,7 @@ BEGIN
  VAR num1 := 5;
  VAR num2 := 5;
  VAR total:= num1+num2-3;
+ WRITELN('Resultado de b3: ',b3);
  WRITELN(c3);
  WRITELN('El total de la suma es: ',total);
 END.

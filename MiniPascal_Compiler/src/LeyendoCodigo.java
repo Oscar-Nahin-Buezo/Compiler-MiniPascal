@@ -14,6 +14,7 @@ import org.antlr.v4.runtime.tree.ParseTree;
 public class LeyendoCodigo extends MiniPascalBaseListener {
     private Map<String, Object> variables = new HashMap<>();
     private Map<String, variablex> pila = new HashMap<>();
+    private String salida_input="";
     @Override public void exitSentencia_write(MiniPascalParser.Sentencia_writeContext ctx) {
         boolean correcto =true;
 
@@ -23,15 +24,16 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
                 identi = identi.substring(1,identi.length()-1);
                 variablex tengo = null;
                 tengo = pila.get(identi);
-                if(tengo==null)
+                if(tengo==null|| !tengo.getRango().equals(""))
                     correcto=false;
             }
         }
         if(correcto){
             String periodico = recorrer_writeln(ctx);
             System.out.println(periodico);
+            this.salida_input = periodico;
         }else{
-            System.out.println("***La WRITE o WRITELN: "+ctx.getText()+" No se puede imprimir debido a variables nulas***");
+            System.out.println("***La WRITE o WRITELN: "+ctx.getText()+" No se puede imprimir debido a variables nulas o contiene un arreglo***");
         }
 
         /*String ref = ctx.ID().toString();
@@ -49,66 +51,72 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
 
 
     }
+    public String mostrar_salida(){
+        return salida_input;
+    }
 
     @Override public void enterExpresion(MiniPascalParser.ExpresionContext ctx) {
         //System.out.println("Eentramns a una asigancion");
         //System.out.println(ctx.getText());
     }
     @Override public void enterSentencia_asignacion(MiniPascalParser.Sentencia_asignacionContext ctx) {
-        int verificacion = verificar_tipo_valor(ctx.expresion().getText());
-        if(verificacion==0){
-            alamcenar_variable( ctx.ID().getText(),ctx.expresion().getText(),"String");
-            variables.put(ctx.ID().getText(),ctx.expresion().getText());
-        }
-        if(verificacion==1){
-            alamcenar_variable( ctx.ID().getText(),ctx.expresion().getText(),"Integer");
-            variables.put(ctx.ID().getText(),ctx.expresion().getText());
-        }
-        if(verificacion==2){
-            alamcenar_variable( ctx.ID().getText(),ctx.expresion().getText(),"Double");
-            variables.put(ctx.ID().getText(),ctx.expresion().getText());
-        }
-        if(verificacion==4){
-            //System.out.println("ENtramos a booleano");
-            alamcenar_variable( ctx.ID().getText(),ctx.expresion().getText(),"Boolean");
-            variables.put(ctx.ID().getText(),ctx.expresion().getText());
-        }
-        if(verificacion==100){
-            //System.out.println("La expresion: "+ctx.expresion().getText());
-            String addop = ctx.expresion().ADDOP().toString();
-            String mulop = ctx.expresion().MULOP().toString();
-            String ande = ctx.expresion().AND().toString();
-            String ore = ctx.expresion().OR().toString();
-            /*System.out.println("Addop: "+addop);
-            System.out.println("mulop: "+mulop);
-            System.out.println("and: "+ande);
-            System.out.println("or: "+ore);*/
-            if(!addop.equals("[]")||!mulop.equals("[]")){
-                //System.out.println("llamaremos a la aritmetica: "+ctx.expresion().getText());
-                boolean operacion = operacion_aritmetica(ctx.ID().getText(),ctx.expresion().getText());
-                if(!operacion){
-                    //System.out.println("llamaremos a la concatenacion: "+ctx.expresion().getText());
-                    operacion_concatenacion(ctx.ID().getText(),ctx.expresion().getText());
-                }
-            }else if(!ande.equals("[]")||!ore.equals("[]")){
-                String renovado = "";
-                for (int j = 0; j<ctx.expresion().getChildCount(); j++){
-                    if(j ==ctx.expresion().getChildCount()-1) {
-                        renovado += ctx.expresion().getChild(j).getText();
-                    }else{
-                        renovado+=ctx.expresion().getChild(j).getText()+" ";
+        if (ctx.arreglo()!=null) {
+            //System.out.println(ctx.ID().getText()+" "+ctx.arreglo().getText());
+            almacenar_arreglo(ctx.ID().getText(), ctx.arreglo().getText());
+        } else {
+            int verificacion = verificar_tipo_valor(ctx.expresion().getText());
+            if (verificacion == 0) {
+                alamcenar_variable(ctx.ID().getText(), ctx.expresion().getText(), "String");
+                variables.put(ctx.ID().getText(), ctx.expresion().getText());
+            }
+            if (verificacion == 1) {
+                alamcenar_variable(ctx.ID().getText(), ctx.expresion().getText(), "Integer");
+                variables.put(ctx.ID().getText(), ctx.expresion().getText());
+            }
+            if (verificacion == 2) {
+                alamcenar_variable(ctx.ID().getText(), ctx.expresion().getText(), "Double");
+                variables.put(ctx.ID().getText(), ctx.expresion().getText());
+            }
+            if (verificacion == 4) {
+                //System.out.println("ENtramos a booleano");
+                alamcenar_variable(ctx.ID().getText(), ctx.expresion().getText(), "Boolean");
+                variables.put(ctx.ID().getText(), ctx.expresion().getText());
+            }
+            if (verificacion == 100) {
+                //System.out.println("La expresion: "+ctx.expresion().getText());
+                String addop = ctx.expresion().ADDOP().toString();
+                String mulop = ctx.expresion().MULOP().toString();
+                String ande = ctx.expresion().AND().toString();
+                String ore = ctx.expresion().OR().toString();
+                /*System.out.println("Addop: "+addop);
+                System.out.println("mulop: "+mulop);
+                System.out.println("and: "+ande);
+                System.out.println("or: "+ore);*/
+                if (!addop.equals("[]") || !mulop.equals("[]")) {
+                    //System.out.println("llamaremos a la aritmetica: "+ctx.expresion().getText());
+                    boolean operacion = operacion_aritmetica(ctx.ID().getText(), ctx.expresion().getText());
+                    if (!operacion) {
+                        //System.out.println("llamaremos a la concatenacion: "+ctx.expresion().getText());
+                        operacion_concatenacion(ctx.ID().getText(), ctx.expresion().getText());
                     }
+                } else if (!ande.equals("[]") || !ore.equals("[]")) {
+                    String renovado = "";
+                    for (int j = 0; j < ctx.expresion().getChildCount(); j++) {
+                        if (j == ctx.expresion().getChildCount() - 1) {
+                            renovado += ctx.expresion().getChild(j).getText();
+                        } else {
+                            renovado += ctx.expresion().getChild(j).getText() + " ";
+                        }
 
-                }
-                //System.out.println("llamaremos a la operacion booleana: "+ctx.expresion().getText());
-                //System.out.println("Veamos si tiene and o or: "+ctx.expresion().OR().toString());
-                boolean exito =operaciones_booleanas(ctx.ID().getText(),renovado);
-                if(!exito){
-                    JOptionPane.showMessageDialog(null,"Error al asignar valor a la varible booleana: "+ctx.ID().getText());
+                    }
+                    //System.out.println("llamaremos a la operacion booleana: "+ctx.expresion().getText());
+                    //System.out.println("Veamos si tiene and o or: "+ctx.expresion().OR().toString());
+                    boolean exito = operaciones_booleanas(ctx.ID().getText(), renovado);
+                    if (!exito) {
+                        JOptionPane.showMessageDialog(null, "Error al asignar valor a la varible booleana: " + ctx.ID().getText());
+                    }
                 }
             }
-
-
         }
 
     }
@@ -136,6 +144,83 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
 
 
     }
+    public void almacenar_arreglo(String name, String inicializacion){
+        try{
+            //System.out.println("La expresion queda asi: "+inicializacion);
+            String rango = inicializacion.substring(6,12);
+            rango = rango.substring(4,5);
+            //System.out.println("Rango del arreglo: "+rango);
+            inicializacion = inicializacion.substring(14,inicializacion.length());
+            //System.out.println("Se quito el rango: "+inicializacion);
+            int datos_pos1= inicializacion.indexOf("=");
+            String tipo_dato = inicializacion.substring(0,datos_pos1);
+            //System.out.println("El tipo de dato es: "+tipo_dato);
+            inicializacion= inicializacion.substring(datos_pos1+1,inicializacion.length());
+            //System.out.println("Nuevamente actualizacion inicilizacion: "+inicializacion);
+            inicializacion=inicializacion.substring(1,inicializacion.length()-1);
+            String datos = inicializacion;
+            //System.out.println("Datos: "+datos);
+            boolean todo_bien=validacion_datos_arreglo(tipo_dato,datos);
+            if(todo_bien){
+                variablex nueva_variable = new variablex(name, datos,tipo_dato,rango);
+                pila.put(name,nueva_variable);
+                //System.out.println("Arreglo almacenado");
+            }else{
+                System.out.println("¡Error!: No se declaro arreglo: "+name+" Verifique el tipo de dato y los valores");
+            }
+
+        }catch(Exception e){
+            System.out.println("Error al declarar o inicializar el arreglo: "+name);
+        }
+
+    }
+    public boolean validacion_datos_arreglo(String tipo,String datos){
+        boolean pasa = true;
+        try{
+            int comas =0;
+            int valores =0;
+            String filtrado="";
+            //primer filtro es qque deben haber n comas y n+1 valores
+            for (int i = 0; i<datos.length(); i++){
+                char letra=datos.charAt(i);
+                if(letra==',')
+                    comas++;
+                if(letra!=',')
+                    valores++;
+            }
+            if(comas>=valores){
+                //System.out.println("Error: No se puede realizar la declaracion del arreglo ya que los datos son incorrectos");
+                pasa = false;
+            }else{
+                String [] separador = datos.split(",");
+                if(tipo.equals("INTEGER")){
+                  for (String dato: separador){
+                      int numero = Integer.parseInt(dato);
+                  }
+                  pasa= true;
+                }
+                if(tipo.equals("CHAR")){
+                    for (String dato: separador){
+                        if(dato.length()>1)
+                            pasa = false;
+                    }
+
+                }
+                if(tipo.equals("BOOLEAN")){
+                    for (String dato: separador){
+                        if(!dato.equals("true")&&!dato.equals("false"))
+                            pasa = false;
+                    }
+
+                }
+            }
+        }catch(Exception e){
+            pasa = false;
+            return false;
+        }
+        return pasa;
+    }
+
     public void alamcenar_variable(String name, String valor, String tipo){
         variablex variable = new variablex(name, valor, tipo);
         pila.put(name, variable);

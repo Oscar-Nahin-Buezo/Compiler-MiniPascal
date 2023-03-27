@@ -238,6 +238,16 @@ public interface MiniPascalListener extends ParseTreeListener {
 	 */
 	void exitExpresion(MiniPascalParser.ExpresionContext ctx);
 	/**
+	 * Enter a parse tree produced by {@link MiniPascalParser#arreglo}.
+	 * @param ctx the parse tree
+	 */
+	void enterArreglo(MiniPascalParser.ArregloContext ctx);
+	/**
+	 * Exit a parse tree produced by {@link MiniPascalParser#arreglo}.
+	 * @param ctx the parse tree
+	 */
+	void exitArreglo(MiniPascalParser.ArregloContext ctx);
+	/**
 	 * Enter a parse tree produced by {@link MiniPascalParser#term}.
 	 * @param ctx the parse tree
 	 */

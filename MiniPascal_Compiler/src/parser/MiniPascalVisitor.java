@@ -149,6 +149,12 @@ public interface MiniPascalVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitExpresion(MiniPascalParser.ExpresionContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#arreglo}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArreglo(MiniPascalParser.ArregloContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniPascalParser#term}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

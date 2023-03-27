@@ -293,6 +293,18 @@ public class MiniPascalBaseListener implements MiniPascalListener {
 	 *
 	 * <p>The default implementation does nothing.</p>
 	 */
+	@Override public void enterArreglo(MiniPascalParser.ArregloContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
+	@Override public void exitArreglo(MiniPascalParser.ArregloContext ctx) { }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation does nothing.</p>
+	 */
 	@Override public void enterTerm(MiniPascalParser.TermContext ctx) { }
 	/**
 	 * {@inheritDoc}

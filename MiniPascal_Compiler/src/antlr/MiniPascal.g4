@@ -2,14 +2,14 @@ grammar MiniPascal;
 import CommonLexerRules;
 //aqui comienza a buscar y reconocer
 start: PROGRAM ID SEMICOLON estructura_codigo;
-estructura_codigo: librerias? declaracion_iniciacion_variables? declaracion_subprogramas? inicio_de_programa;
-librerias: (USES ID SEMICOLON)?;
+estructura_codigo: librerias declaracion_iniciacion_variables declaracion_subprogramas inicio_de_programa;
+librerias: (USES ID SEMICOLON)*;
 
 //declaracion e inicializacion de variables
 declaracion_iniciacion_variables : VAR ((declaracion_variable |inicializar_variable) SEMICOLON)+ | ;
 declaracion_variable : ID (COMMA ID)* COLON tipo_de_dato ;
 inicializar_variable : ID ASSIGN NUMBER ;
-tipo_de_dato : INTEGER | REAL | BOOLEAN | CHAR ;
+tipo_de_dato : INTEGER  | BOOLEAN | CHAR ;
 
 //declaracion de funciones y metodos
 declaracion_subprogramas : (declarar_funcion | declarar_metodo)* ;
@@ -21,7 +21,7 @@ argumentos : declaracion_variable (COMMA declaracion_variable)* | ;
 inicio_de_programa : BEGIN lista_de_declaraciones END DOT;
 lista_de_declaraciones : declaraciones (SEMICOLON declaraciones)* ;
 declaraciones : declaracion_iniciacion_variables|inicio_de_programa | sentencia_asignacion | sentencia_if | sentencia_while| sentencia_for | sentencia_write | sentencia_read ;
-sentencia_asignacion : VAR? ID ASSIGN expresion ;
+sentencia_asignacion : VAR? ID (ASSIGN expresion | arreglo) ;
 
 //Expresiones para reconocer los if, while  y for
 sentencia_if : IF condicion THEN declaraciones | IF condicion THEN declaraciones ELSE declaraciones ;
@@ -36,5 +36,6 @@ sentencia_read : READ LPAREN ID RPAREN ;
 condicion : expresion relational_operator expresion ;
 relational_operator : MENOR_QUE | MAYOR_QUE | IGUAL | MENOR_MAYOR | MENOR_IGUAL | MAYOR_IGUAL ;
 expresion : term ((ADDOP | OR|MULOP|AND) term)* ;
+arreglo:    ':' 'array' '[' NUMBER '..' NUMBER ']' 'of' tipo_de_dato '=' '(' term (',' term)* ')' ;
 term : ID | NUMBER |BOOLEANO|CONSTSTR|CADENA| LPAREN expresion RPAREN | NOT term;
 //factor : ID | NUMBER | LPAREN expresion RPAREN | NOT factor ;

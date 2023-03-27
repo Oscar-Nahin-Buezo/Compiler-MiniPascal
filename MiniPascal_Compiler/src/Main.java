@@ -88,7 +88,8 @@ public class Main {
                     ParseTree tree2 = parser.start();
                     visitor.visit(tree2);
                     viewer.setTree(tree2);
-                    Mostrar_resultado(tree2);
+                    String resultados =Mostrar_resultado(tree2);
+                    salida.setText(resultados);
                 }
             }
         });
@@ -130,11 +131,12 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
-    public static void Mostrar_resultado(ParseTree tree){
+    public static String Mostrar_resultado(ParseTree tree){
         ParseTreeWalker caminante = new ParseTreeWalker();
         LeyendoCodigo lector = new LeyendoCodigo();
         caminante.walk(new LeyendoCodigo(), tree);
-
+        String resultado = lector.mostrar_salida();
+        return resultado;
     }
     public static String lectura_archivo() throws FileNotFoundException {
         String ruta2="";
