@@ -160,7 +160,7 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
             inicializacion=inicializacion.substring(1,inicializacion.length()-1);
             String datos = inicializacion;
             //System.out.println("Datos: "+datos);
-            boolean todo_bien=validacion_datos_arreglo(tipo_dato,datos);
+            boolean todo_bien=validacion_datos_arreglo(tipo_dato,datos,rango);
             if(todo_bien){
                 variablex nueva_variable = new variablex(name, datos,tipo_dato,rango);
                 pila.put(name,nueva_variable);
@@ -174,9 +174,10 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
         }
 
     }
-    public boolean validacion_datos_arreglo(String tipo,String datos){
+    public boolean validacion_datos_arreglo(String tipo,String datos, String rango){
         boolean pasa = true;
         try{
+            int tamano=Integer.parseInt(rango);
             int comas =0;
             int valores =0;
             String filtrado="";
@@ -193,25 +194,29 @@ public class LeyendoCodigo extends MiniPascalBaseListener {
                 pasa = false;
             }else{
                 String [] separador = datos.split(",");
-                if(tipo.equals("INTEGER")){
-                  for (String dato: separador){
-                      int numero = Integer.parseInt(dato);
-                  }
-                  pasa= true;
-                }
-                if(tipo.equals("CHAR")){
-                    for (String dato: separador){
-                        if(dato.length()>1)
-                            pasa = false;
+                if(separador.length>tamano){
+                    pasa=false;
+                }else{
+                    if(tipo.equals("INTEGER")){
+                        for (String dato: separador){
+                            int numero = Integer.parseInt(dato);
+                        }
+                        pasa= true;
                     }
+                    if(tipo.equals("CHAR")){
+                        for (String dato: separador){
+                            if(dato.length()>1)
+                                pasa = false;
+                        }
 
-                }
-                if(tipo.equals("BOOLEAN")){
-                    for (String dato: separador){
-                        if(!dato.equals("true")&&!dato.equals("false"))
-                            pasa = false;
                     }
+                    if(tipo.equals("BOOLEAN")){
+                        for (String dato: separador){
+                            if(!dato.equals("true")&&!dato.equals("false"))
+                                pasa = false;
+                        }
 
+                    }
                 }
             }
         }catch(Exception e){
