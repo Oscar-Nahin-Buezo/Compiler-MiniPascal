@@ -1,26 +1,15 @@
-import org.antlr.runtime.ANTLRInputStream;
 import org.antlr.v4.runtime.CharStream;
 import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
-import static org.antlr.v4.runtime.CharStreams.fromFileName;
 import static org.antlr.v4.runtime.CharStreams.fromString;
-import org.antlr.v4.runtime.tree.*;
 import org.antlr.v4.gui.*;
 import parser.*;
-
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.nio.*;
-import java.nio.file.Paths;
-import java.nio.file.Path;
 import java.util.Scanner;
 import javax.swing.*;
 import java.io.*;
 import java.util.*;
-import javax.swing.*;
-import java.util.ArrayDeque;
-import java.util.Deque;
 public class Main {
     public static void main(String[] args) {
         System.out.println("Bienvenido al compilador Mini-Pascal!");
