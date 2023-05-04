@@ -11,153 +11,213 @@ import org.antlr.v4.runtime.tree.ParseTreeVisitor;
  */
 public interface MiniPascalVisitor<T> extends ParseTreeVisitor<T> {
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#start}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#program}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitStart(MiniPascalParser.StartContext ctx);
+	T visitProgram(MiniPascalParser.ProgramContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#estructura_codigo}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#block}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitEstructura_codigo(MiniPascalParser.Estructura_codigoContext ctx);
+	T visitBlock(MiniPascalParser.BlockContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#librerias}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#varDeclaration}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLibrerias(MiniPascalParser.LibreriasContext ctx);
+	T visitVarDeclaration(MiniPascalParser.VarDeclarationContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#declaracion_iniciacion_variables}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#varDeclList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclaracion_iniciacion_variables(MiniPascalParser.Declaracion_iniciacion_variablesContext ctx);
+	T visitVarDeclList(MiniPascalParser.VarDeclListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#declaracion_variable}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#varDecl}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclaracion_variable(MiniPascalParser.Declaracion_variableContext ctx);
+	T visitVarDecl(MiniPascalParser.VarDeclContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#inicializar_variable}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#type}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInicializar_variable(MiniPascalParser.Inicializar_variableContext ctx);
+	T visitType(MiniPascalParser.TypeContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#tipo_de_dato}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#statement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitTipo_de_dato(MiniPascalParser.Tipo_de_datoContext ctx);
+	T visitStatement(MiniPascalParser.StatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#declaracion_subprogramas}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#functionStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclaracion_subprogramas(MiniPascalParser.Declaracion_subprogramasContext ctx);
+	T visitFunctionStatement(MiniPascalParser.FunctionStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#declarar_funcion}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#compoundStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarar_funcion(MiniPascalParser.Declarar_funcionContext ctx);
+	T visitCompoundStatement(MiniPascalParser.CompoundStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#declarar_metodo}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#statementList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclarar_metodo(MiniPascalParser.Declarar_metodoContext ctx);
+	T visitStatementList(MiniPascalParser.StatementListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#argumentos}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#assignmentStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitArgumentos(MiniPascalParser.ArgumentosContext ctx);
+	T visitAssignmentStatement(MiniPascalParser.AssignmentStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#inicio_de_programa}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#ifStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitInicio_de_programa(MiniPascalParser.Inicio_de_programaContext ctx);
+	T visitIfStatement(MiniPascalParser.IfStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#lista_de_declaraciones}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#whileStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitLista_de_declaraciones(MiniPascalParser.Lista_de_declaracionesContext ctx);
+	T visitWhileStatement(MiniPascalParser.WhileStatementContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#declaraciones}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#procedureCall}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitDeclaraciones(MiniPascalParser.DeclaracionesContext ctx);
+	T visitProcedureCall(MiniPascalParser.ProcedureCallContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#sentencia_asignacion}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#argumentList}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSentencia_asignacion(MiniPascalParser.Sentencia_asignacionContext ctx);
+	T visitArgumentList(MiniPascalParser.ArgumentListContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#sentencia_if}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#expression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSentencia_if(MiniPascalParser.Sentencia_ifContext ctx);
+	T visitExpression(MiniPascalParser.ExpressionContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#sentencia_while}.
+	 * Visit a parse tree produced by {@link MiniPascalParser#simpleExpression}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitSentencia_while(MiniPascalParser.Sentencia_whileContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#sentencia_for}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSentencia_for(MiniPascalParser.Sentencia_forContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#sentencia_write}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSentencia_write(MiniPascalParser.Sentencia_writeContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#sentencia_read}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitSentencia_read(MiniPascalParser.Sentencia_readContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#condicion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitCondicion(MiniPascalParser.CondicionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#relational_operator}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRelational_operator(MiniPascalParser.Relational_operatorContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#expresion}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitExpresion(MiniPascalParser.ExpresionContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link MiniPascalParser#arreglo}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitArreglo(MiniPascalParser.ArregloContext ctx);
+	T visitSimpleExpression(MiniPascalParser.SimpleExpressionContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link MiniPascalParser#term}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitTerm(MiniPascalParser.TermContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#factor}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFactor(MiniPascalParser.FactorContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#variable}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVariable(MiniPascalParser.VariableContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#constant}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitConstant(MiniPascalParser.ConstantContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#relop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRelop(MiniPascalParser.RelopContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#addop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitAddop(MiniPascalParser.AddopContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#mulop}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitMulop(MiniPascalParser.MulopContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#arrayType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayType(MiniPascalParser.ArrayTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#arrayDecList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayDecList(MiniPascalParser.ArrayDecListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#arrayDec}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitArrayDec(MiniPascalParser.ArrayDecContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#typeList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypeList(MiniPascalParser.TypeListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#componentType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitComponentType(MiniPascalParser.ComponentTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#endType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitEndType(MiniPascalParser.EndTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#indexType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIndexType(MiniPascalParser.IndexTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#simpleType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitSimpleType(MiniPascalParser.SimpleTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#scalarType}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitScalarType(MiniPascalParser.ScalarTypeContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#identifierList}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitIdentifierList(MiniPascalParser.IdentifierListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#typeIdentifier}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitTypeIdentifier(MiniPascalParser.TypeIdentifierContext ctx);
 }

@@ -1,0 +1,8 @@
+program Hello;
+
+begin
+  a := 10;
+  b := 11;
+  c := a + b;
+  writeln('el resultado es: ', c);
+end.

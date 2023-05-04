@@ -1,41 +1,83 @@
 grammar MiniPascal;
-import CommonLexerRules;
-//aqui comienza a buscar y reconocer
-start: PROGRAM ID SEMICOLON estructura_codigo;
-estructura_codigo: librerias declaracion_iniciacion_variables declaracion_subprogramas inicio_de_programa;
-librerias: (USES ID SEMICOLON)*;
+//Palabras reservadas para tipos
 
-//declaracion e inicializacion de variables
-declaracion_iniciacion_variables : VAR ((declaracion_variable |inicializar_variable) SEMICOLON)+ | ;
-declaracion_variable : ID (COMMA ID)* COLON tipo_de_dato ;
-inicializar_variable : ID ASSIGN NUMBER ;
-tipo_de_dato : INTEGER  | BOOLEAN | CHAR ;
+W_Integer: [Ii] [Nn] [Tt] [Ee] [Gg] [Ee] [Rr];
+W_Char: [Cc] [Hh] [Aa] [Rr];
+W_String: [Ss] [Tt] [Rr] [Ii] [Nn] [Gg] ('('[0-9]+')')?;
+W_Boolean: [Bb] [Oo] [Oo] [Ll] [Ee] [Aa] [Nn];
+//Definicion necesaria para Arrays
+ARRAY: [Aa] [Rr] [Rr] [Aa] [Yy];
+TYPE: [Tt] [Yy] [Pp] [Ee];
 
-//declaracion de funciones y metodos
-declaracion_subprogramas : (declarar_funcion | declarar_metodo)* ;
-declarar_funcion : FUNCTION ID LPAREN argumentos RPAREN COLON tipo_de_dato SEMICOLON declaracion_iniciacion_variables inicio_de_programa ;
-declarar_metodo : PROCEDURE ID LPAREN argumentos RPAREN SEMICOLON declaracion_iniciacion_variables inicio_de_programa ;
-argumentos : declaracion_variable (COMMA declaracion_variable)* | ;
+//Tipos
+ID: [a-zA-Z_] [a-zA-Z0-9_]*;
+IDString: [a-zA-Z0-9_] [a-zA-Z0-9_]*;
+NUMBER: [0-9]+ ('.' [0-9]+)? ;
+STRING: '\'' .*? '\'';
+WS: [ \t\n\r]+ -> skip ;
+INTEGER: ('+'|'-')? [0-9]+;
+BOOLEAN: [Tt] [Rr] [Uu] [Ee] | [Ff] [Aa] [Ll] [Ss] [Ee] ;
+CHAR: '\'' . '\'' ;
+NEWLINE: [\n]+;
 
-//inicio; es decir begin y las declaracion de variables, metodos y funciones, condiciones etc.
-inicio_de_programa : BEGIN lista_de_declaraciones END DOT;
-lista_de_declaraciones : declaraciones (SEMICOLON declaraciones)* ;
-declaraciones : declaracion_iniciacion_variables|inicio_de_programa | sentencia_asignacion | sentencia_if | sentencia_while| sentencia_for | sentencia_write | sentencia_read ;
-sentencia_asignacion : VAR? ID (ASSIGN expresion | arreglo) ;
+// Palabras Reservadas
+PROGRAM: [Pp] [Rr] [Oo] [Gg] [Rr] [Aa] [Mm];
+VAR: [Vv] [Aa] [Rr];
+PROCEDURE: [Pp] [Rr] [Oo] [Cc] [Ee] [Dd] [Uu] [Rr] [Ee];
+BEGIN: [Bb] [Ee] [Gg] [Ii] [Nn];
+END: [Ee] [Nn] [Dd];
+IF: [Ii] [Ff];
+THEN: [Tt] [Hh] [Ee] [Nn];
+ELSE: [Ee] [Ll] [Ss] [Ee];
+WHILE: [Ww] [Hh] [Ii] [Ll] [Ee];
+DO: [Dd] [Oo];
+NOT: [Nn] [Oo] [Tt];
+OR: [Oo] [Rr];
+DIV: [Dd] [Ii] [Vv];
+MOD: [Mm] [Oo] [Dd];
+AND: [Aa] [Nn] [Dd];
+COMMENT: '{' ~[\r\n]* '}' -> skip;
+OF: [Oo] [Ff];
+FUNCTION: [Ff] [Uu] [Nn] [Cc] [Tt] [Ii] [Oo] [Nn];
 
-//Expresiones para reconocer los if, while  y for
-sentencia_if : IF condicion THEN declaraciones | IF condicion THEN declaraciones ELSE declaraciones ;
-sentencia_while: WHILE condicion DO declaraciones ;
-sentencia_for : FOR ID ASSIGN expresion TO expresion DO declaraciones ;
+//Simbolos
+COMMA: ',';
 
-//reconocer la funciones de write, ejemplo.txt wirteln('hola') y lectura desde el teclado con read
-sentencia_write : (WRITE LPAREN expresion RPAREN|WRITELN LPAREN CONSTSTR RPAREN|WRITELN LPAREN (ID (COMMA (ID|CONSTSTR))*)*(CONSTSTR (COMMA (ID|CONSTSTR))*)* RPAREN)|(WRITELN|WRITE) LPAREN ID RPAREN ;
-sentencia_read : READ LPAREN ID RPAREN ;
+//Definicion de procedimientos
+program: 'program' ID ';' block '.' + EOF;
+block: (varDeclaration)* (arrayType)*  statement | (arrayType)*  (varDeclaration)* statement;
+varDeclaration: 'var' (varDeclList ';')+ ;
+varDeclList: varDecl;
+varDecl: ID (',' ID)* ':' type;
+type: W_Integer | W_Char | W_String | W_Boolean;
+statement: compoundStatement | assignmentStatement | ifStatement | whileStatement | procedureCall |functionStatement ;
+functionStatement: FUNCTION ID '(' (varDecl)* ')' ':' type ';';
+compoundStatement: 'begin' statementList 'end' ;
+statementList: statement ( ';' statement )* ';'?;
+assignmentStatement: variable ':=' expression ';'| variable ':' type (('=') expression)*';';
+ifStatement: 'if' expression 'then' statement ('else' statement)? ;
+whileStatement: 'while' expression 'do' statement ;
+procedureCall: ID '(' argumentList ')' ;
+argumentList: expression (',' expression)* ;
+expression: simpleExpression (relop simpleExpression)? ;
+simpleExpression: term ((addop term))* ;
+term: factor ((mulop factor))* ;
+factor: constant | variable | '(' expression ')';
+variable: ID ;
+constant: NUMBER | STRING | 'true' | 'false' ;
+relop: '=' | '<' | '>' | '<=' | '>=' | '<>' | NOT | AND | OR;
+addop: '+' | '-';
+mulop: '*' | '/' | 'div' | 'mod';
 
-//condicion y argumentos del los if, while etc.
-condicion : expresion relational_operator expresion ;
-relational_operator : MENOR_QUE | MAYOR_QUE | IGUAL | MENOR_MAYOR | MENOR_IGUAL | MAYOR_IGUAL ;
-expresion : term ((ADDOP | OR|MULOP|AND) term)* ;
-arreglo:    ':' 'array' '[' NUMBER '..' NUMBER ']' 'of' tipo_de_dato '=' '(' term (',' term)* ')' ;
-term : ID | NUMBER |BOOLEANO|CONSTSTR|CADENA| LPAREN expresion RPAREN | NOT term;
-//factor : ID | NUMBER | LPAREN expresion RPAREN | NOT factor ;
+//Metodologia a utilizar para array solo se tiene que llamar el arrayType para poder definirlo antes del VAR
+arrayType: (TYPE)* (arrayDecList ';')+;
+arrayDecList: arrayDec;
+arrayDec: ARRAY '[' typeList ']' ('of'|'OF'|'oF'| 'Of') componentType | ID ('=' | ':') ARRAY '['identifierList']' ('of'|'OF'|'oF'| 'Of') componentType;
+typeList: indexType (COMMA indexType)*;
+componentType: endType;
+endType:  typeIdentifier;
+indexType: simpleType;
+simpleType: scalarType;
+scalarType: identifierList;
+identifierList: IDString '..' IDString (COMMA IDString '..' IDString)* | W_Char | W_Boolean | W_Integer;
+typeIdentifier:  IDString '..' IDString | W_Char | W_Boolean | W_Integer;

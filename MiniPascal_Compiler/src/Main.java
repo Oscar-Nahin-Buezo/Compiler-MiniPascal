@@ -39,7 +39,7 @@ public class Main {
                 MiniPascalParser parser = new MiniPascalParser(token);
                 parser.removeErrorListeners();
                 parser.addErrorListener(new MyErrorListener());
-                ParseTree tree = parser.start();
+                ParseTree tree = parser.program();
                 ejecutarGui(tree, parser, contenido);
             }else{
                 JOptionPane.showMessageDialog(null,"Selecciones un archivo");
@@ -85,11 +85,11 @@ public class Main {
 
                     //se procede a generar el arbol AST
                     MiniPascalParser parser = new MiniPascalParser(token);
-                    ParseTree tree2 = parser.start();
+                    ParseTree tree2 = parser.program();
                     visitor.visit(tree2);
                     viewer.setTree(tree2);
-                    String resultados =Mostrar_resultado(tree2);
-                    salida.setText(resultados);
+                   // String resultados =Mostrar_resultado(tree2);
+                    //salida.setText(resultados);
                 }
             }
         });
@@ -131,13 +131,13 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
-    public static String Mostrar_resultado(ParseTree tree){
-        ParseTreeWalker caminante = new ParseTreeWalker();
-        LeyendoCodigo lector = new LeyendoCodigo();
-        caminante.walk(new LeyendoCodigo(), tree);
-        String resultado = lector.mostrar_salida();
-        return resultado;
-    }
+    //public static String Mostrar_resultado(ParseTree tree){
+        //ParseTreeWalker caminante = new ParseTreeWalker();
+        //LeyendoCodigo lector = new LeyendoCodigo();
+        //caminante.walk(new LeyendoCodigo(), tree);
+        //String resultado = lector.mostrar_salida();
+       // return resultado;
+    //}
     public static String lectura_archivo() throws FileNotFoundException {
         String ruta2="";
         String contenido ="";
@@ -178,7 +178,7 @@ public class Main {
 
             //se procede a generar el arbol AST
             MiniPascalParser parser = new MiniPascalParser(token);
-            tree = parser.start();
+            tree = parser.program();
             return tree;
         }catch(Exception j){
             System.out.println(j);
