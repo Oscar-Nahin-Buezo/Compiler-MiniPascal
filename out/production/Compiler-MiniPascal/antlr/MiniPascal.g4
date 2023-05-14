@@ -46,7 +46,7 @@ COMMA: ',';
 //Definicion de procedimientos
 program: 'program' ID ';' block '.' + EOF;
 block: (varDeclaration)* (arrayType)*  statement | (arrayType)*  (varDeclaration)* statement;
-varDeclaration: 'var' (varDeclList ';')+ | 'var' (assignmentStatement)+;
+varDeclaration: 'var' (varDeclList ';')+ ;
 varDeclList: varDecl;
 varDecl: ID (',' ID)* ':' type ;
 type: W_Integer | W_Char | W_String | W_Boolean;
