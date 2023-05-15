@@ -4,15 +4,19 @@ import java.io.ObjectOutputStream;
 
 public class Variable {
     private String nombre;
-    private Class<?> tipo;
+    private String tipo;
     private Object valor;
 
-    public Variable(String nombre, Class<?> tipo, Object valor) {
+    public Variable(String nombre, String tipo, Object valor) {
         this.nombre = nombre;
         this.tipo = tipo;
         this.valor = valor;
     }
 
+    public Variable(String nombre, String tipo) {
+        this.nombre = nombre;
+        this.tipo = tipo;
+    }
     public String getNombre() {
         return nombre;
     }
@@ -21,11 +25,11 @@ public class Variable {
         this.nombre = nombre;
     }
 
-    public Class<?> getTipo() {
+    public String getTipo() {
         return tipo;
     }
 
-    public void setTipo(Class<?> tipo) {
+    public void setTipo(String tipo) {
         this.tipo = tipo;
     }
 

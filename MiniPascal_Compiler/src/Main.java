@@ -3,6 +3,7 @@ import org.antlr.v4.runtime.CommonTokenStream;
 import org.antlr.v4.runtime.tree.ParseTree;
 import static org.antlr.v4.runtime.CharStreams.fromString;
 import org.antlr.v4.gui.*;
+import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import parser.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -77,7 +78,7 @@ public class Main {
                     ParseTree tree2 = parser.program();
                     visitor.visit(tree2);
                     viewer.setTree(tree2);
-                   // String resultados =Mostrar_resultado(tree2);
+                    String resultados =Mostrar_resultado(tree2);
                     //salida.setText(resultados);
                 }
             }
@@ -120,13 +121,13 @@ public class Main {
         frame.pack();
         frame.setVisible(true);
     }
-    //public static String Mostrar_resultado(ParseTree tree){
-        //ParseTreeWalker caminante = new ParseTreeWalker();
-        //LeyendoCodigo lector = new LeyendoCodigo();
-        //caminante.walk(new LeyendoCodigo(), tree);
+    public static String Mostrar_resultado(ParseTree tree){
+        ParseTreeWalker caminante = new ParseTreeWalker();
+        GeneratorCode lector = new GeneratorCode();
+        caminante.walk(new GeneratorCode(), tree);
         //String resultado = lector.mostrar_salida();
-       // return resultado;
-    //}
+        return "resultado";
+    }
     public static String lectura_archivo() throws FileNotFoundException {
         String ruta2="";
         String contenido ="";
