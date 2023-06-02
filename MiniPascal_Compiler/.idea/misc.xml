@@ -13,6 +13,16 @@
           <option name="language" value="" />
           <option name="generateVisitor" value="true" />
         </PerGrammarGenerationSettings>
+        <PerGrammarGenerationSettings>
+          <option name="fileName" value="$PROJECT_DIR$/src/antlr2/MiniPascal.g4" />
+          <option name="autoGen" value="true" />
+          <option name="outputDir" value="C:\Users\HP\OneDrive\Documentos\GitHub\Compiler-MiniPascal\MiniPascal_Compiler\src" />
+          <option name="libDir" value="" />
+          <option name="encoding" value="" />
+          <option name="pkg" value="parser" />
+          <option name="language" value="" />
+          <option name="generateVisitor" value="true" />
+        </PerGrammarGenerationSettings>
       </list>
     </option>
   </component>

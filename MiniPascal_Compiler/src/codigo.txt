@@ -1,10 +1,11 @@
 program suma;
 
-var num1, num2, resultado: integer;
-
+var num1: integer;
+var num2: integer;
+var resultado: integer;
 begin
   write('Ingrese el primer número:');
-  num1:='5';
+  num1:=h;
 
   write('Ingrese el segundo número:');
   num2 :='2';

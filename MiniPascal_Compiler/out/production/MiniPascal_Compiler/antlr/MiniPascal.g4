@@ -45,16 +45,17 @@ COMMA: ',';
 
 //Definicion de procedimientos
 program: 'program' ID ';' block '.' + EOF;
-block: (varDeclaration)* (arrayType)*  statement | (arrayType)*  (varDeclaration)* statement;
+block: (varDeclaration)* (arrayType)*  statement | (arrayType)*  (varDeclaration)* statement|functionStatement;
 varDeclaration: 'var' (varDeclList ';')+ ;
 varDeclList: varDecl;
-varDecl: ID (',' ID)* ':' type;
+varDecl: ID (',' ID)* ':' type ;
 type: W_Integer | W_Char | W_String | W_Boolean;
 statement: compoundStatement | assignmentStatement | ifStatement | whileStatement | procedureCall |functionStatement ;
-functionStatement: FUNCTION ID '(' (varDecl)* ')' ':' type ';';
+functionStatement: 'function' ID '(' (varDecl)* ')' ':' type ';' block;
+//functionDeclaration: FUNCTION identifier (formalParameterList)? COLON resultType SEMI block;
 compoundStatement: 'begin' statementList 'end' ;
 statementList: statement ( ';' statement )* ';'?;
-assignmentStatement: variable ':=' expression ';'| variable ':' type (('=') expression)*';';
+assignmentStatement: variable ':=' expression | variable ':' type (('=') expression)*';';
 ifStatement: 'if' expression 'then' statement ('else' statement)? ;
 whileStatement: 'while' expression 'do' statement ;
 procedureCall: ID '(' argumentList ')' ;

@@ -86,4 +86,3 @@ CADENA:  '"' ~["\r\n]* '"' ;
 ID: [A-Za-z] [A-Za-z0-9]*;
 NUMBER: [0-9]+;
 LETTER: '\'' [a-zA-Z] '\'';
-
