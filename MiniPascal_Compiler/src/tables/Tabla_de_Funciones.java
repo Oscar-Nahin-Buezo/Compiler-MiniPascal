@@ -6,6 +6,7 @@ import typing.Type;
 import variables.Variable;
 
 import java.util.Formatter;
+import java.util.Map;
 
 public class Tabla_de_Funciones  {
     private String name;
@@ -57,6 +58,48 @@ public class Tabla_de_Funciones  {
 
         }else{
             return false;
+        }
+    }
+
+    public boolean existe_variable_en_tabla(String nameTable, String nameVariable){
+        boolean existe = false;
+        if(this.funciones.containsKey(nameTable)){
+            TableSymbol tabla = this.funciones.get(nameTable);
+            existe = tabla.exist_variable(nameVariable);
+        }
+        return existe;
+    }
+    public Variable getVariableFromTable(String name, String scope){
+        if(this.funciones.containsKey(scope)){
+            TableSymbol tabla = this.funciones.get(scope);
+            if(tabla.exist_variable(name))
+                return tabla.getVariable(name);
+        }
+            return null;
+
+    }
+    public boolean actualizarValorDeVariable(Variable variable, String valor){
+        boolean correcto = false;
+        if(this.funciones.containsKey(variable.getScope())){
+            this.funciones.get(variable.getScope()).getVariable(variable.getNombre()).setValor(valor);
+            correcto = true;
+        }
+
+        return correcto;
+    }
+
+    public void imprimir_tablas (){
+        for (Map.Entry<String, TableSymbol> entry : this.funciones.entrySet()) {
+            String key = entry.getKey();
+            TableSymbol value = entry.getValue();
+            System.out.println("Tabla de: "+key);
+            System.out.println("NUmero de variables: "+value.numero_variables());
+            for (Map.Entry<String, Variable> entry2 : value.getVariables().entrySet()) {
+                String key2 = entry2.getKey();
+                Variable value2 = entry2.getValue();
+                System.out.println("Symbolo o variable: " + key2 + ", Tipo: " + value2.getTipo());
+            }
+
         }
     }
 }

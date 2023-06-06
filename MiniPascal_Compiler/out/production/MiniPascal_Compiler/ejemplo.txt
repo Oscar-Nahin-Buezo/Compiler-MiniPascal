@@ -1,6 +1,6 @@
 program SumaDosNumeros;
 
-function Sumar(num1, num2: integer): integer;
+function Sumar(num1, num2: integer;): integer;
 var
   resultado: integer;
 begin

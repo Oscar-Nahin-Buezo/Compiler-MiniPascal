@@ -1,9 +1,6 @@
 package tables;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Formatter;
+import java.util.*;
 
 import typing.Type;
 import variables.Variable;
@@ -36,8 +33,10 @@ public class TableSymbol {
 
     public boolean addVariable(Variable variable) {
         if(this.variable.containsKey(variable.getNombre())){
+            //System.out.println("No entro a ingresar variable global");
             return false;
         }else{
+            //System.out.println("ENtro a ingresar variable global");
             this.variable.put(variable.getNombre(),variable);
             return true;
         }
@@ -79,5 +78,41 @@ public class TableSymbol {
 
     public void setOrder(Integer order) {
         this.order = order;
+    }
+
+    public boolean exist_variable(String name){
+        if(this.variable.containsKey(name))
+            return true;
+        return false;
+    }
+    public Variable getVariable(String name){
+        if(this.variable.containsKey(name)){
+            return this.variable.get(name);
+        }else{
+            return null;
+        }
+    }
+
+    public boolean actualizarValorDeVariable(Variable variable, String valor){
+        boolean correcto = false;
+        if(this.variable.containsKey(variable.getNombre())){
+            this.variable.get(variable.getNombre()).setValor(valor);
+            correcto = true;
+        }
+
+        return correcto;
+    }
+    public Integer numero_variables(){
+        return this.variable.size();
+    }
+
+    public void imprimir_tablas (){
+        for (Map.Entry<String, Variable> entry : this.variable.entrySet()) {
+            String key = entry.getKey();
+            Variable value = entry.getValue();
+            System.out.println("Variable o simbolo: "+key+" tipo: "+value.getTipo());
+
+
+        }
     }
 }

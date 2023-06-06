@@ -8,7 +8,7 @@ public class Variable {
     private String nombre;
     private String tipo;
    private String Scope;
-
+   private String valor;
 
     public Variable(String nombre, String tipo, String Scope) {
         this.nombre = nombre;
@@ -36,4 +36,19 @@ public class Variable {
         this.tipo = tipo;
     }
 
+    public String getScope() {
+        return Scope;
+    }
+
+    public void setScope(String scope) {
+        Scope = scope;
+    }
+
+    public String getValor() {
+        return valor;
+    }
+
+    public void setValor(String valor) {
+        this.valor = valor;
+    }
 }
