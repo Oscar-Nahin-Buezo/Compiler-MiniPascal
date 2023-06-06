@@ -1,17 +1,16 @@
-PROGRAM ejemplo;
-BEGIN
- WRITELN('Suma');
- VAR miArreglo: array [1..5] of INTEGER = (1, 2, 3, 4, 5);
- VAR c1 := "hola";
- VAR c2 := "Mundo";
- VAR c3 := c1+c2;
- VAR b1:= true;
- VAR b2:= false;
- VAR b3:= b1 or b2;
- VAR num1 := 5;
- VAR num2 := 5;
- VAR total:= num1+num2-3;
- WRITELN('Resultado de b3: ',b3);
- WRITELN(c3);
- WRITELN('El total de la suma es: ',total);
-END.
+program suma;
+
+var num1: integer;
+var num2: integer;
+var resultado: integer;
+begin
+  write('Ingrese el primer número:');
+  num1:=h;
+
+  write('Ingrese el segundo número:');
+  num2 :='2';
+
+  resultado := num1 + num2;
+
+  write('La suma es: ', resultado);
+end.

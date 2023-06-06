@@ -5,6 +5,8 @@ import static org.antlr.v4.runtime.CharStreams.fromString;
 import org.antlr.v4.gui.*;
 import org.antlr.v4.runtime.tree.ParseTreeWalker;
 import parser.*;
+import validador.validador_semantico;
+
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Scanner;
@@ -30,6 +32,11 @@ public class Main {
                 parser.removeErrorListeners();
                 parser.addErrorListener(new MyErrorListener());
                 ParseTree tree = parser.program();
+                //validador_semantico checker = new validador_semantico();
+                ParseTreeWalker caminante = new ParseTreeWalker();
+                caminante.walk(new validador_semantico(), tree);
+                // O parser ocorreu sem problemas
+                System.out.println("Parse successfull!");
                 ejecutarGui(tree, parser, contenido);
             }else{
                 JOptionPane.showMessageDialog(null,"Selecciones un archivo");
@@ -123,8 +130,8 @@ public class Main {
     }
     public static String Mostrar_resultado(ParseTree tree){
         ParseTreeWalker caminante = new ParseTreeWalker();
-        GeneratorCode lector = new GeneratorCode();
-        caminante.walk(new GeneratorCode(), tree);
+       // GeneratorCode lector = new GeneratorCode();
+        //caminante.walk(new GeneratorCode(), tree);
         //String resultado = lector.mostrar_salida();
         return "resultado";
     }
