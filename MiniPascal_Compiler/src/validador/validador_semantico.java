@@ -105,6 +105,7 @@ public class validador_semantico extends MiniPascalBaseListener  {
         }
 
     }
+
     @Override public void exitFunctionDeclaration(MiniPascalParser.FunctionDeclarationContext ctx) {
         if(correcto){
             this.ActualScope= "Global";
@@ -223,4 +224,31 @@ public class validador_semantico extends MiniPascalBaseListener  {
         this.MessageError="Error en la linea: "+linea+": "+error;
     }
 
+     public void enterWhileStatement(MiniPascalParser.WhileStatementContext ctx) {
+        // Retrieve the condition expression
+        MiniPascalParser.ExpressionContext conditionContext = ctx.expression();
+        String condition = conditionContext.getText();
+        
+        // Perform semantic validation on the condition
+        if (!isValidCondition(condition)) {
+            // Report an error or perform appropriate action for invalid conditions
+            System.err.println("Invalid condition: " + condition);
+        }
+        
+        // Process the block of statements inside the while loop
+        MiniPascalParser.BlockContext blockContext = ctx.block();
+        processStatements(blockContext);
+    }
+    
+    private boolean isValidCondition(String condition) {
+        return condition.equals("true") || condition.equals("false");
+    }
+    
+    private void processStatements(MiniPascalParser.BlockContext blockContext) {
+        // Process the statements inside the block
+        for (MiniPascalParser.StatementContext statementContext : blockContext.statement()) {
+            // Process each statement
+            // ...
+        }
+    }
 }
