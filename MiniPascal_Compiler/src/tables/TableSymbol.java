@@ -85,6 +85,7 @@ public class TableSymbol {
             return true;
         return false;
     }
+
     public Variable getVariable(String name){
         if(this.variable.containsKey(name)){
             return this.variable.get(name);
@@ -110,8 +111,7 @@ public class TableSymbol {
         for (Map.Entry<String, Variable> entry : this.variable.entrySet()) {
             String key = entry.getKey();
             Variable value = entry.getValue();
-            System.out.println("Variable o simbolo: "+key+" tipo: "+value.getTipo());
-
+            System.out.println("Variable o simbolo: "+key+" tipo: "+value.getTipo()+ " valor: "+value.getValor());
 
         }
     }

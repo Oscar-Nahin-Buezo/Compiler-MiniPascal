@@ -88,6 +88,13 @@ public class Tabla_de_Funciones  {
         return correcto;
     }
 
+    public boolean exist_table(String name){
+        if(this.funciones.containsKey(name)){
+            return true;
+        }
+        return false;
+    }
+
     public void imprimir_tablas (){
         for (Map.Entry<String, TableSymbol> entry : this.funciones.entrySet()) {
             String key = entry.getKey();

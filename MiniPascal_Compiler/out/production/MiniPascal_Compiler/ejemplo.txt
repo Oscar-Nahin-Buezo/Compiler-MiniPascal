@@ -1,24 +1,44 @@
 program SumaDosNumeros;
 
-function Sumar(num1, num2: integer;): integer;
+function Sumar(num1, num2: integer): integer;
 var
   resultado: integer;
 begin
   resultado := num1 + num2 * 5/4;
-  Sumar := resultado;
+  result := resultado;
+end;
+
+function logico(num1, num2: integer): boolean;
+var
+  resultado: boolean;
+begin
+  resultado := num1 > num2;
+  result := resultado;
+end;
+
+procedure Sin_Retorno(num1, num2: integer);
+var
+  resultado: boolean;
+begin
+  resultado := num1 > num2;
 end;
 
 var
   a, b, suma: integer;
+  c, d:Boolean;
 
 begin
+  a := 5.256;
+  b:=6*4*3;
+  c:= true;
+  d:=logico(a,b);
   writeln('Ingrese el primer número: ');
   readln(a);
 
   writeln('Ingrese el segundo número: ');
   readln(b);
 
-  suma := Sumar(a, b);
+  suma := Sumar(a,b);
 
   writeln('La suma de ', a, ' y ', b, ' es: ', suma);
 
