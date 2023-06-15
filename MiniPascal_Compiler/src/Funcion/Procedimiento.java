@@ -4,29 +4,20 @@ import tables.TableSymbol;
 import variables.Variable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 
-public class Funcion {
+public class Procedimiento{
     private String name;
     private ArrayList<Variable> parametros = new ArrayList<>();
     private TableSymbol simbolos ;
     private boolean returnValue;
-    private String tipoRenorno;
-    private String resultType;
+
     ArrayList< operaciones> operaciones = new ArrayList<>();
 
-    public Funcion(String name, ArrayList<Variable>parametro){
+    public Procedimiento(String name, ArrayList<Variable>parametro){
         this.name= name;
         this.parametros = parametro;
         this.simbolos = new TableSymbol(name);
-        this.resultType="null";
-    }
-    public Funcion(String name, ArrayList<Variable>parametro, String resultType){
-        this.name= name;
-        this.parametros = parametro;
-        this.simbolos = new TableSymbol(name);
-        this.resultType=resultType;
+
     }
 
 
@@ -74,7 +65,7 @@ public class Funcion {
 
         return correcto;
     }
-    public boolean addSymbolInTableFunction ( Variable variable){
+    public boolean addSymbolInTableProcedimiento ( Variable variable){
         return this.simbolos.addVariable(variable);
     }
     public boolean actualizarValorDeVariable(Variable variable, String valor){
@@ -104,17 +95,11 @@ public class Funcion {
         this.returnValue = returnValue;
     }
 
-    public String getResultType() {
-        return resultType;
-    }
 
-    public void setResultType(String resultType) {
-        this.resultType = resultType;
-    }
 
-    public void imprimir_funcion(){
+    public void imprimir_procedimiento(){
         System.out.println("--------------------------------------------------------------------------------");
-        System.out.println("Funcion: "+this.name+" Tipo de valor de retorno: "+this.resultType);
+        System.out.println("Procedimiento: "+this.name );
         System.out.println("Parametros: ");
         for(Variable var: this.parametros){
             System.out.println(var.getNombre()+" Tipo: "+var.getTipo()+" valor: "+var.getValor());
