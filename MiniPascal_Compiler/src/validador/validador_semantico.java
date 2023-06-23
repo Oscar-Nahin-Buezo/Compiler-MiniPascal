@@ -237,12 +237,57 @@ public class validador_semantico extends MiniPascalBaseListener  {
         processStatements(blockContext);
     }
     
+    private void processStatements(MiniPascalParser.BlockContext blockContext) {
+        for (MiniPascalParser.StatementContext statementContext : blockContext.statement()) {
+            if (statementContext.ifStatement() != null) {
+                // Process if statement
+                processIfStatement(statementContext.ifStatement());
+            } else if (statementContext.whileStatement() != null) {
+                // Process while statement
+                processWhileStatement(statementContext.whileStatement());
+            }
+            // Add more conditions for other types of statements if needed
+        }
+    }
+    
+    private void processIfStatement(MiniPascalParser.IfStatementContext ifStatementContext) {
+        MiniPascalParser.ExpressionContext conditionContext = ifStatementContext.expression();
+        String condition = conditionContext.getText();
+        System.out.println("Entered if statement with condition: " + condition);
+        
+        if (!isValidCondition(condition)) {
+            System.err.println("Invalid condition: " + condition);
+        }
+        
+        MiniPascalParser.BlockContext blockContext = ifStatementContext.block();
+        processStatements(blockContext);
+        
+        // Process optional else statement
+        if (ifStatementContext.elseStatement() != null) {
+            processElseStatement(ifStatementContext.elseStatement());
+        }
+    }
+    
+    private void processElseStatement(MiniPascalParser.ElseStatementContext elseStatementContext) {
+        MiniPascalParser.BlockContext blockContext = elseStatementContext.block();
+        processStatements(blockContext);
+    }
+    
+    private void processWhileStatement(MiniPascalParser.WhileStatementContext whileStatementContext) {
+        MiniPascalParser.ExpressionContext conditionContext = whileStatementContext.expression();
+        String condition = conditionContext.getText();
+        System.out.println("Entered while statement with condition: " + condition);
+        
+        if (!isValidCondition(condition)) {
+            System.err.println("Invalid condition: " + condition);
+        }
+        
+        MiniPascalParser.BlockContext blockContext = whileStatementContext.block();
+        processStatements(blockContext);
+    }
+    
     private boolean isValidCondition(String condition) {
         return condition.equals("true") || condition.equals("false");
     }
     
-    private void processStatements(MiniPascalParser.BlockContext blockContext) {
-        for (MiniPascalParser.StatementContext statementContext : blockContext.statement()) {
-        }
-    }
 }
