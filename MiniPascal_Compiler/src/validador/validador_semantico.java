@@ -225,17 +225,14 @@ public class validador_semantico extends MiniPascalBaseListener  {
     }
 
      public void enterWhileStatement(MiniPascalParser.WhileStatementContext ctx) {
-        // Retrieve the condition expression
         MiniPascalParser.ExpressionContext conditionContext = ctx.expression();
         String condition = conditionContext.getText();
+        System.out.println("Entered while statement with condition: " + condition);
         
-        // Perform semantic validation on the condition
         if (!isValidCondition(condition)) {
-            // Report an error or perform appropriate action for invalid conditions
             System.err.println("Invalid condition: " + condition);
         }
         
-        // Process the block of statements inside the while loop
         MiniPascalParser.BlockContext blockContext = ctx.block();
         processStatements(blockContext);
     }
@@ -245,10 +242,7 @@ public class validador_semantico extends MiniPascalBaseListener  {
     }
     
     private void processStatements(MiniPascalParser.BlockContext blockContext) {
-        // Process the statements inside the block
         for (MiniPascalParser.StatementContext statementContext : blockContext.statement()) {
-            // Process each statement
-            // ...
         }
     }
 }
