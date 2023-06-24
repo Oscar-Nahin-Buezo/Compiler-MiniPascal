@@ -11,6 +11,7 @@ import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import Funcion.*;
+import antlr2.PascalParser;
 public class validador_semantico extends MiniPascalBaseListener  {
     private String ActualScope = "Global";
     private TableSymbol GlobalSymbol = new TableSymbol("Global");
@@ -246,7 +247,6 @@ public class validador_semantico extends MiniPascalBaseListener  {
                 // Process while statement
                 processWhileStatement(statementContext.whileStatement());
             }
-            // Add more conditions for other types of statements if needed
         }
     }
     
@@ -290,4 +290,13 @@ public class validador_semantico extends MiniPascalBaseListener  {
         return condition.equals("true") || condition.equals("false");
     }
     
+    //Exit while
+    public Void visitExitwhilestatement(MiniPascalParser.WhileStatementContext ctx) {
+        if (whileLoopStack.isEmpty()) {
+            System.err.println("ERROR: 'EXITWHILE' statement used outside of a while loop.");
+        } else {
+            whileLoopStack.pop();
+        }
+        return null;
+    }
 }
