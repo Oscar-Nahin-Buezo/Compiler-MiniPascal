@@ -8,6 +8,7 @@ import tables.TableSymbol;
 import variables.*;
 
 import java.util.HashMap;
+import java.util.Stack;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import Funcion.*;
@@ -289,14 +290,15 @@ public class validador_semantico extends MiniPascalBaseListener  {
     private boolean isValidCondition(String condition) {
         return condition.equals("true") || condition.equals("false");
     }
-    
+
+    private Stack<Boolean> whileLoopStack=new Stack<>();;
+
     //Exit while
-    public Void visitExitwhilestatement(MiniPascalParser.WhileStatementContext ctx) {
-        if (whileLoopStack.isEmpty()) {
-            System.err.println("ERROR: 'EXITWHILE' statement used outside of a while loop.");
-        } else {
-            whileLoopStack.pop();
-        }
+     public Void visitWhilestatement(MiniPascalParser.WhilestatementContext ctx) {
+        whileLoopStack.push(true);
+        // Additional logic for handling while loop
+        super.visitWhilestatement(ctx);
+        whileLoopStack.pop();
         return null;
     }
 }
