@@ -417,6 +417,24 @@ public interface MiniPascalVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitSimpleStatement(MiniPascalParser.SimpleStatementContext ctx);
 	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#write}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWrite(MiniPascalParser.WriteContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#read}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRead(MiniPascalParser.ReadContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link MiniPascalParser#expressionWrite}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitExpressionWrite(MiniPascalParser.ExpressionWriteContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link MiniPascalParser#assignmentStatement}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
