@@ -3,15 +3,21 @@ program SumaDosNumeros;
 function Sumar(num1, num2: integer): integer;
 var
   resultado: integer;
+  a: Integer;
 begin
-  resultado := num1 + num2 * 5/4;
+
+ WRITELN('Entramos a sumar o lo que sea');
+  resultado := num1 + num2 +1;
   result := resultado;
 end;
 
 function logico(num1, num2: integer): boolean;
 var
   resultado: boolean;
+  prueba: Integer;
 begin
+writeln('Ingresa el valor del entero prueba: ');
+readln(prueba);
   resultado := num1 > num2;
   result := resultado;
 end;
@@ -19,7 +25,10 @@ end;
 procedure Sin_Retorno(num1, num2: integer);
 var
   resultado: boolean;
+  tormenta: Integer;
 begin
+writeln('Ingresa el valor de la tormenta ');
+readln(tormenta);
   resultado := num1 > num2;
 end;
 
@@ -28,11 +37,13 @@ var
   c, d:Boolean;
 
 begin
-  a := 5.256;
-  b:=6*4*3;
+  a := 1;
+  b:=1;
   c:= true;
   d:=logico(a,b);
-  writeln('Ingrese el primer número: ');
+  Sin_Retorno(a,b);
+
+  WRITELN('Ingrese el primer número: ');
   readln(a);
 
   writeln('Ingrese el segundo número: ');
@@ -41,5 +52,18 @@ begin
   suma := Sumar(a,b);
 
   writeln('La suma de ', a, ' y ', b, ' es: ', suma);
+   repeat
+      VAR inter: integer;
+      writeln('bloque repeat');
+      a:=a + 1;
+      writeln('Ingrese el valor de inter: ');
+      readln(inter);
+    until a < 5;
+
+    while b < 10 do
+     begin
+       writeln('El contador es: ', b);
+       b := b * 2;
+     end;
 
 end.

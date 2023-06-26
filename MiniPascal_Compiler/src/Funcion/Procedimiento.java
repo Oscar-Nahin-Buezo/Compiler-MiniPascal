@@ -95,7 +95,17 @@ public class Procedimiento{
         this.returnValue = returnValue;
     }
 
-
+    public boolean setOperacion(String name, String expresion){
+        boolean valido = false;
+        for(int i = 0; i<this.operaciones.size(); i++){
+            operaciones op = this.operaciones.get(i);
+            if(op.getNameOperacion().equalsIgnoreCase(name)){
+                this.operaciones.get(i).setExpresion(expresion);
+                valido = true;
+            }
+        }
+        return valido;
+    }
 
     public void imprimir_procedimiento(){
         System.out.println("--------------------------------------------------------------------------------");

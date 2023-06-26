@@ -11,6 +11,7 @@ public class Funcion {
     private String name;
     private ArrayList<Variable> parametros = new ArrayList<>();
     private TableSymbol simbolos ;
+    private TableSymbol varTemporales;
     private boolean returnValue;
     private String tipoRenorno;
     private String resultType;
@@ -20,6 +21,7 @@ public class Funcion {
         this.name= name;
         this.parametros = parametro;
         this.simbolos = new TableSymbol(name);
+        this.varTemporales = new TableSymbol(name);
         this.resultType="null";
     }
     public Funcion(String name, ArrayList<Variable>parametro, String resultType){
@@ -77,6 +79,15 @@ public class Funcion {
     public boolean addSymbolInTableFunction ( Variable variable){
         return this.simbolos.addVariable(variable);
     }
+    public boolean addSymbolInVarTemporales ( Variable variable){
+        return this.varTemporales.addVariable(variable);
+    }
+    public void resetearVarTemporales (){
+        this.varTemporales = new TableSymbol(this.name);
+    }
+    public boolean actualizarValorDeVariableTemporal(Variable variable, String valor){
+        return this.varTemporales.actualizarValorDeVariable(variable, valor);
+    }
     public boolean actualizarValorDeVariable(Variable variable, String valor){
         return this.simbolos.actualizarValorDeVariable(variable, valor);
     }
@@ -87,7 +98,17 @@ public class Funcion {
     public void setParametros(ArrayList<Variable> parametros) {
         this.parametros = parametros;
     }
-
+    public boolean setOperacion(String name, String expresion){
+        boolean valido = false;
+        for(int i = 0; i<this.operaciones.size(); i++){
+            operaciones op = this.operaciones.get(i);
+            if(op.getNameOperacion().equalsIgnoreCase(name)){
+                this.operaciones.get(i).setExpresion(expresion);
+                valido = true;
+            }
+        }
+        return valido;
+    }
     public TableSymbol getSimbolos() {
         return simbolos;
     }
