@@ -1912,7 +1912,131 @@ public class validador_semantico extends MiniPascalBaseListener  {
             System.out.println("Error en el nodo de while");
         }
     }
+    @Override public void enterForStatement(MiniPascalParser.ForStatementContext ctx) {
 
+        try{
+            if(correcto){
+                if(this.ActualScope.equalsIgnoreCase("global")){
+                    int linea = ctx.getStart().getLine();
+
+                    if(ctx.forList().initialValue()!=null && ctx.forList().finalValue()!=null){
+                        String valorInicial = ctx.forList().initialValue().getText();
+                        String valorFinal = ctx.forList().finalValue().getText();
+                        if(isNUmber("",valorInicial)&& isNUmber("",valorFinal)){
+                            if(valorFinal.contains(".") && valorFinal.charAt(0)!='.'){
+                                String []digitos = valorFinal.split(".");
+                                valorFinal = digitos[0];
+                            }
+                            if(valorInicial.contains(".") && valorInicial.charAt(0)!='.'){
+                                String []digitos = valorInicial.split(".");
+                                valorInicial = digitos[0];
+                            }
+                            int valorIni = Integer.parseInt(valorInicial);
+                            int valorFin = Integer.parseInt(valorFinal);
+
+                            for(int i = valorIni; i<valorFin; i++){
+                                if(ctx.statements()!=null){
+
+                                        if (correcto) {
+                                            //System.out.println("EL condicionar va: "+nuevaExpression);
+
+                                            String[] procesos = ctx.statements().getText().split(";");
+                                            for (String parte : procesos) {
+                                                //-------------------Veremos si es writeln-------------------
+                                                if(parte.contains("write")|| parte.contains("WRITE")|| parte.contains("writeln")|| parte.contains("WRITELN")){
+                                                    String subWrite = parte.substring(0,10);
+                                                    String subWriteln = parte.substring(0,12);
+                                                    if(subWriteln.equalsIgnoreCase("beginwriteln")||subWrite.equalsIgnoreCase("beginwrite")){
+                                                        String []componentes = parte.split("\\(");
+                                                        String texto = componentes[1];
+                                                        String textoMejorado = texto.substring(0, texto.length()-1);
+                                                        imprimir_en_rutina(textoMejorado, linea);
+                                                    }else{
+                                                        subWrite = parte.substring(0,5);
+                                                        subWriteln = parte.substring(0,7);
+
+                                                        if(subWriteln.equalsIgnoreCase("writeln")||subWrite.equalsIgnoreCase("write")){
+                                                            String []componentes = parte.split("\\(");
+                                                            String texto = componentes[1];
+                                                            String textoMejorado = texto.substring(0, texto.length()-1);
+                                                            imprimir_en_rutina(textoMejorado, linea);
+                                                        }
+                                                    }
+                                                }
+                                                //----------Varemos si es inicializacion de variable----------------
+                                                String regexInicializacio = "\\b(?:\\w+(?:,\\s+)?)+\\s*:=\\s*\\S+";
+                                                boolean matches = Pattern.matches(regexInicializacio, parte);
+                                                if (matches) {
+                                                    //System.out.println(parte + " Es una inicializacion de variable existente");
+                                                    String[] segmentos = parte.split(":=");
+                                                    String left = segmentos[0];
+                                                    Variable variable = null;
+                                                    if(this.GlobalSymbol.exist_variable(left)){
+                                                        variable = this.GlobalSymbol.getVariable(left);
+                                                    }
+                                                    if(this.VarSubRutina.exist_variable(left)){
+                                                        variable = this.VarSubRutina.getVariable(left);
+                                                    }
+                                                    if(variable!=null){
+                                                        String tipo = variable.getTipo();
+                                                        boolean numerico = tipo.equalsIgnoreCase("integer")|| tipo.equalsIgnoreCase("real")
+                                                                ||tipo.equalsIgnoreCase("double");
+
+                                                        String reemplazo = reestructurar_operacion(segmentos[1]);
+                                                        // System.out.println("EL originar segmento: "+segmentos[1]);
+                                                        // System.out.println("El reempalzo: "+reemplazo);
+                                                        if(isNUmber("0",reemplazo)&& numerico){
+                                                            //System.out.println("eS NUMERO");
+                                                            Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                                        }else if(isOperacion_aritmetica(reemplazo)&& numerico){
+                                                            String solucion = ""+evaluarOperacion(reemplazo);
+                                                            //System.out.println("ES OPERACION ARITMETICA "+reemplazo);
+                                                            //System.out.println("solucion: "+solucion);
+                                                            Actualizar_valor_de_variableRutina(variable, solucion);
+                                                        }else if(variable.getTipo().equalsIgnoreCase("String")&& esString(reemplazo)){
+                                                            Actualizar_valor_de_variableRutina(variable, reemplazo);
+
+                                                        }else if(variable.getTipo().equalsIgnoreCase("char") && esChar(reemplazo)){
+                                                            Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                                        }else if(variable.getTipo().equalsIgnoreCase("boolean")&& esBooleano(reemplazo)){
+                                                            Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                                        }else if (variable.getTipo().equalsIgnoreCase("boolean")&& isOperacion_boolena(reemplazo)){
+                                                            Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                                        } else{
+                                                            correcto = false;
+                                                            String error = "error en compatibidad de tipo y valores: "+ variable.getNombre();
+                                                            //int linea = ctx.getStart().getLine();
+                                                            CreateMessageError(error, linea);
+                                                        }
+                                                    }else{
+                                                        correcto = false;
+                                                        String error = "No existe variable en el repeat o global";
+                                                        //int linea = ctx.getStart().getLine();
+                                                        CreateMessageError(error, linea);
+                                                    }
+
+                                                }
+                                                //------------------------------fin inicializacion-------------------------
+                                            }
+                                        }
+
+
+                                  /*  //this.ScopeSubRutina="";
+                                    String quad2 =nextQuad + ":" + "FINAL_REPEAT,"+ctx.expression().getText()+",_,exit:";
+                                    quads.add(quad2);
+                                    nextQuad++;
+                                    this.VarSubRutina=new TableSymbol("GlobalTemporales");*/
+                                }
+                            }
+
+                        }
+                    }
+                }
+            }
+        }catch(Exception e){
+            System.out.println("Error en el nodo de FOR");
+        }
+    }
     @Override public void exitRepeatStatement(MiniPascalParser.RepeatStatementContext ctx) {
         this.ScopeSubRutina="";
     }
@@ -2072,6 +2196,210 @@ public class validador_semantico extends MiniPascalBaseListener  {
             nextQuad++;
         }
     }
+    @Override public void enterIfStatement(MiniPascalParser.IfStatementContext ctx) {
+        try{
+            if(correcto){
+                if(this.ActualScope.equalsIgnoreCase("Global")){
+                    if(ctx.expression()!=null){
+                        String condicion = ctx.expression().getText();
+                        condicion = reestructurar_operacion(condicion);
+                        boolean sigue = false;
+                        if(isOperacion_boolena(condicion)){
+                            sigue = evaluateBooleanExpression(condicion);
+                        }
+                        if(esBooleano(condicion)){
+                            sigue = Boolean.parseBoolean(condicion);
+                        }
+                        if(sigue){
+                            if(ctx.statements()!=null){
+                                //System.out.println("EL condicionar va: "+nuevaExpression);
+                                String[] procesos = ctx.statements(0).getText().split(";");
+                                for (String parte : procesos) {
+                                    //-------------------Veremos si es writeln-------------------
+                                    if(parte.contains("write")|| parte.contains("WRITE")|| parte.contains("writeln")|| parte.contains("WRITELN")){
+                                        String subWrite = parte.substring(0,10);
+                                        String subWriteln = parte.substring(0,12);
+                                        if(subWriteln.equalsIgnoreCase("beginwriteln")||subWrite.equalsIgnoreCase("beginwrite")){
+                                            String []componentes = parte.split("\\(");
+                                            String texto = componentes[1];
+                                            String textoMejorado = texto.substring(0, texto.length()-1);
+                                            int linea = ctx.getStart().getLine();
+                                            imprimir_en_rutina(textoMejorado, linea);
+                                        }else{
+                                            subWrite = parte.substring(0,5);
+                                            subWriteln = parte.substring(0,7);
+                                            if(subWriteln.equalsIgnoreCase("writeln")||subWrite.equalsIgnoreCase("write")){
+                                                int linea = ctx.getStart().getLine();
+                                                String []componentes = parte.split("\\(");
+                                                String texto = componentes[1];
+                                                String textoMejorado = texto.substring(0, texto.length()-1);
+                                                imprimir_en_rutina(textoMejorado, linea);
+                                            }
+                                        }
+                                    }
+                                    //------------------------------Verificar si es inicializacion--------------------------
+                                    String regexInicializacio = "\\b(?:\\w+(?:,\\s+)?)+\\s*:=\\s*\\S+";
+                                    boolean matches = Pattern.matches(regexInicializacio, parte);
+                                    if (matches) {
+                                        //System.out.println(parte + " Es una inicializacion de variable existente");
+                                        String[] segmentos = parte.split(":=");
+                                        String left = segmentos[0];
+                                        Variable variable = null;
+                                        if(this.GlobalSymbol.exist_variable(left)){
+                                            variable = this.GlobalSymbol.getVariable(left);
+                                        }
+                                        if(this.VarSubRutina.exist_variable(left)){
+                                            variable = this.VarSubRutina.getVariable(left);
+                                        }
+                                        if(variable!=null){
+                                            String tipo = variable.getTipo();
+                                            boolean numerico = tipo.equalsIgnoreCase("integer")|| tipo.equalsIgnoreCase("real")
+                                                    ||tipo.equalsIgnoreCase("double");
+
+                                            String reemplazo = reestructurar_operacion(segmentos[1]);
+                                            // System.out.println("EL originar segmento: "+segmentos[1]);
+                                            // System.out.println("El reempalzo: "+reemplazo);
+                                            if(isNUmber("0",reemplazo)&& numerico){
+                                                //System.out.println("eS NUMERO");
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            }else if(isOperacion_aritmetica(reemplazo)&& numerico){
+                                                String solucion = ""+evaluarOperacion(reemplazo);
+                                                //System.out.println("ES OPERACION ARITMETICA "+reemplazo);
+                                                //System.out.println("solucion: "+solucion);
+                                                Actualizar_valor_de_variableRutina(variable, solucion);
+                                            }else if(variable.getTipo().equalsIgnoreCase("String")&& esString(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+
+                                            }else if(variable.getTipo().equalsIgnoreCase("char") && esChar(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            }else if(variable.getTipo().equalsIgnoreCase("boolean")&& esBooleano(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            }else if (variable.getTipo().equalsIgnoreCase("boolean")&& isOperacion_boolena(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            } else{
+                                                correcto = false;
+                                                String error = "error en compatibidad de tipo y valores: "+ variable.getNombre();
+                                                int linea = ctx.getStart().getLine();
+                                                CreateMessageError(error, linea);
+                                            }
+                                        }else{
+                                            correcto = false;
+                                            String error = "No existe variable en el repeat o global";
+                                            int linea = ctx.getStart().getLine();
+                                            CreateMessageError(error, linea);
+                                        }
+
+                                    }
+                                    //------------------------------fin inicializacion-------------------------
+                                }
+
+
+                        //this.ScopeSubRutina="";
+                      /*  String quad2 =nextQuad + ":" + "FINAL_REPEAT,"+ctx.expression().getText()+",_,exit:";
+                        quads.add(quad2);
+                        nextQuad++;*/
+                            }
+                        }else{
+                            if(ctx.statements(1)!=null){
+                                //System.out.println("EL condicionar va: "+nuevaExpression);
+                                String[] procesos = ctx.statements(1).getText().split(";");
+                                for (String parte : procesos) {
+                                    //-------------------Veremos si es writeln-------------------
+                                    if(parte.contains("write")|| parte.contains("WRITE")|| parte.contains("writeln")|| parte.contains("WRITELN")){
+                                        String subWrite = parte.substring(0,10);
+                                        String subWriteln = parte.substring(0,12);
+                                        if(subWriteln.equalsIgnoreCase("beginwriteln")||subWrite.equalsIgnoreCase("beginwrite")){
+                                            String []componentes = parte.split("\\(");
+                                            String texto = componentes[1];
+                                            String textoMejorado = texto.substring(0, texto.length()-1);
+                                            int linea = ctx.getStart().getLine();
+                                            imprimir_en_rutina(textoMejorado, linea);
+                                        }else{
+                                            subWrite = parte.substring(0,5);
+                                            subWriteln = parte.substring(0,7);
+                                            if(subWriteln.equalsIgnoreCase("writeln")||subWrite.equalsIgnoreCase("write")){
+                                                int linea = ctx.getStart().getLine();
+                                                String []componentes = parte.split("\\(");
+                                                String texto = componentes[1];
+                                                String textoMejorado = texto.substring(0, texto.length()-1);
+                                                imprimir_en_rutina(textoMejorado, linea);
+                                            }
+                                        }
+                                    }
+                                    //------------------------------Verificar si es inicializacion--------------------------
+                                    String regexInicializacio = "\\b(?:\\w+(?:,\\s+)?)+\\s*:=\\s*\\S+";
+                                    boolean matches = Pattern.matches(regexInicializacio, parte);
+                                    if (matches) {
+                                        //System.out.println(parte + " Es una inicializacion de variable existente");
+                                        String[] segmentos = parte.split(":=");
+                                        String left = segmentos[0];
+                                        Variable variable = null;
+                                        if(this.GlobalSymbol.exist_variable(left)){
+                                            variable = this.GlobalSymbol.getVariable(left);
+                                        }
+                                        if(this.VarSubRutina.exist_variable(left)){
+                                            variable = this.VarSubRutina.getVariable(left);
+                                        }
+                                        if(variable!=null){
+                                            String tipo = variable.getTipo();
+                                            boolean numerico = tipo.equalsIgnoreCase("integer")|| tipo.equalsIgnoreCase("real")
+                                                    ||tipo.equalsIgnoreCase("double");
+
+                                            String reemplazo = reestructurar_operacion(segmentos[1]);
+                                            // System.out.println("EL originar segmento: "+segmentos[1]);
+                                            // System.out.println("El reempalzo: "+reemplazo);
+                                            if(isNUmber("0",reemplazo)&& numerico){
+                                                //System.out.println("eS NUMERO");
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            }else if(isOperacion_aritmetica(reemplazo)&& numerico){
+                                                String solucion = ""+evaluarOperacion(reemplazo);
+                                                //System.out.println("ES OPERACION ARITMETICA "+reemplazo);
+                                                //System.out.println("solucion: "+solucion);
+                                                Actualizar_valor_de_variableRutina(variable, solucion);
+                                            }else if(variable.getTipo().equalsIgnoreCase("String")&& esString(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+
+                                            }else if(variable.getTipo().equalsIgnoreCase("char") && esChar(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            }else if(variable.getTipo().equalsIgnoreCase("boolean")&& esBooleano(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            }else if (variable.getTipo().equalsIgnoreCase("boolean")&& isOperacion_boolena(reemplazo)){
+                                                Actualizar_valor_de_variableRutina(variable, reemplazo);
+                                            } else{
+                                                correcto = false;
+                                                String error = "error en compatibidad de tipo y valores: "+ variable.getNombre();
+                                                int linea = ctx.getStart().getLine();
+                                                CreateMessageError(error, linea);
+                                            }
+                                        }else{
+                                            correcto = false;
+                                            String error = "No existe variable en el repeat o global";
+                                            int linea = ctx.getStart().getLine();
+                                            CreateMessageError(error, linea);
+                                        }
+
+                                    }
+                                    //------------------------------fin inicializacion-------------------------
+                                }
+
+
+                                //this.ScopeSubRutina="";
+                      /*  String quad2 =nextQuad + ":" + "FINAL_REPEAT,"+ctx.expression().getText()+",_,exit:";
+                        quads.add(quad2);
+                        nextQuad++;*/
+                            }
+                        }
+
+                    }
+
+
+                }
+            }
+        }catch(Exception e){
+          System.out.println("ALgo salio mal con el nodo de IF");
+        }
+    }
+    @Override public void exitIfStatement(MiniPascalParser.IfStatementContext ctx) { }
     public String convertToLLVM(String intermediateCode) {
         try{
             //WRITELN('Ingrese el primer número: ');

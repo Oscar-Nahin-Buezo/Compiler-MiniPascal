@@ -92,7 +92,7 @@ structuredStatement: compoundStatement| conditionalStatement| repetetiveStatemen
 compoundStatement /* Statement section */: BEGIN statements END;
 statements: statement (SEMI statement)*;
 conditionalStatement: ifStatement| caseStatement;
-ifStatement: IF expression THEN statement (: ELSE statement)?;
+ifStatement: IF expression THEN statements (: ELSE statements)?;
 caseStatement: CASE expression OF caseListElement (SEMI caseListElement)* (SEMI ELSE statements)? END;
 caseListElement: constList COLON statement;
 repetetiveStatement: whileStatement| repeatStatement| forStatement;

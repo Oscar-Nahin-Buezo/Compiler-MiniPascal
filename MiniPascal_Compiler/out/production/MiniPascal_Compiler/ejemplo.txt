@@ -3,9 +3,7 @@ program SumaDosNumeros;
 function Sumar(num1, num2: integer): integer;
 var
   resultado: integer;
-  a: Integer;
 begin
-
  WRITELN('Entramos a sumar o lo que sea');
   resultado := num1 + num2 +1;
   result := resultado;
@@ -65,5 +63,12 @@ begin
        writeln('El contador es: ', b);
        b := b * 2;
      end;
-
+    if b >1000 then
+        writeln('ENtramos al write positivo de if');
+      else
+        writeln('ENtramos al write negativo de if.');
+   for i := 1 to 10 do
+   begin
+   write('write for');
+   end;
 end.
