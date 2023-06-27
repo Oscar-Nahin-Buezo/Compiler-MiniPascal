@@ -4,7 +4,7 @@ function Sumar(num1, num2: integer): integer;
 var
   resultado: integer;
 begin
- WRITELN('Entramos a sumar o lo que sea');
+ WRITELN('Entramos a funcion sumar');
   resultado := num1 + num2 +1;
   result := resultado;
 end;
@@ -14,6 +14,7 @@ var
   resultado: boolean;
   prueba: Integer;
 begin
+WRITELN('Entramos a la funcion de logico');
 writeln('Ingresa el valor del entero prueba: ');
 readln(prueba);
   resultado := num1 > num2;
@@ -25,6 +26,7 @@ var
   resultado: boolean;
   tormenta: Integer;
 begin
+WRITELN('Entramos al metodo sin retorno');
 writeln('Ingresa el valor de la tormenta ');
 readln(tormenta);
   resultado := num1 > num2;

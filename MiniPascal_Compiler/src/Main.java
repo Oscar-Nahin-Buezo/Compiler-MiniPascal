@@ -53,6 +53,7 @@ public class Main {
         TreeViewer viewer = new TreeViewer(Arrays.asList(parser.getRuleNames()),tree);
         //TreeViewer viewer = null;
         JTextArea  entrada = new JTextArea(25,25);
+
         entrada.setText(contenido);
         JTextArea  salida = new JTextArea(25,25);
         JButton Compilar = new JButton("compilar");
@@ -60,6 +61,7 @@ public class Main {
         JButton Seleccionar_archivo = new JButton("Seleccionar Archivo");
         JFrame frame = new JFrame("Antlr AST");
         JPanel panel = new JPanel();
+
 
         //************Eventos de botones***********************************************************
         Compilar.addActionListener(new ActionListener() {
@@ -118,12 +120,16 @@ public class Main {
             }
         });
         //******************************************************************************************
-        panel.add(entrada);
+        //panel.add(entrada);
         panel.add(Compilar);
-        panel.add(Ver_AST);
+        //panel.add(Ver_AST);
         panel.add(Seleccionar_archivo);
-        panel.add(salida);
+        //panel.add(salida);
         frame.add(panel);
+        JScrollPane scrollPane = new JScrollPane(entrada);
+        scrollPane.setBounds(50,50,150,150);
+        panel.add(scrollPane);
+        //frame.getContentPane().add(scrollPane);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.pack();
         frame.setVisible(true);
